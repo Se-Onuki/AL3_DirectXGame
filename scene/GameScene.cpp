@@ -4,7 +4,9 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { 
+	delete model_;
+}
 
 void GameScene::Initialize() {
 
@@ -14,6 +16,16 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("Object/Player/playerTexture.png");
 	model_ = Model::CreateFromOBJ("Object/Player/playerModel.obj");
+
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
+
+	soundDataHandle_ = audio_->LoadWave("mokugyo.wav");
+	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+	debugCamera_ = new DebugCamera(1280, 720);
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {}

@@ -48,6 +48,11 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	Model* model_ = nullptr;
 
+	WorldTransform worldTransform_;
+	ViewProjection viewProjection_;
+
+	Audio* audio_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
