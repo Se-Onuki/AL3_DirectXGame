@@ -2,11 +2,16 @@
 #include "TextureManager.h"
 #include <cassert>
 #include <imgui.h>
+#include "PrimitiveDrawer.h"
+#include "AxisIndicator.h"
+
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { 
+GameScene::~GameScene() {
+	delete sprite_;
 	delete model_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -15,8 +20,10 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("Object/Player/playerTexture.png");
-	model_ = Model::CreateFromOBJ("Object/Player/playerModel.obj");
+	textureHandle_ = TextureManager::Load("Player/Player.png");
+	model_ = Model::CreateFromOBJ("Player",false);
+	//model_->Initialize("Object/Player/playerModel.obj", false);
+	//model_ = Model::Create();
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -29,7 +36,9 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {	
+	debugCamera_->Update();
+}
 
 void GameScene::Draw() {
 
@@ -57,7 +66,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw()
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
