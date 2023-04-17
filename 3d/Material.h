@@ -19,6 +19,8 @@ public: // サブクラス
 		float pad2;       // パディング
 		Vector3 specular; // スペキュラー係数
 		float alpha;      // アルファ
+		Vector3 uvScale;  // UVスケール
+		Vector3 uvOffset; // UVオフセット
 	};
 
 public: // 静的メンバ関数
@@ -29,12 +31,14 @@ public: // 静的メンバ関数
 	static Material* Create();
 
 public:
-	std::string name_;            // マテリアル名
-	Vector3 ambient_;             // アンビエント影響度
-	Vector3 diffuse_;             // ディフューズ影響度
-	Vector3 specular_;            // スペキュラー影響度
-	float alpha_;                 // アルファ
-	std::string textureFilename_; // テクスチャファイル名
+	std::string name_;             // マテリアル名
+	Vector3 ambient_;              // アンビエント影響度
+	Vector3 diffuse_;              // ディフューズ影響度
+	Vector3 specular_;             // スペキュラー影響度
+	Vector3 uvScale_ = {1, 1, 1};  // UVスケール
+	Vector3 uvOffset_ = {0, 0, 0}; // UVオフセット
+	float alpha_;                  // アルファ
+	std::string textureFilename_;  // テクスチャファイル名
 
 public:
 	/// <summary>

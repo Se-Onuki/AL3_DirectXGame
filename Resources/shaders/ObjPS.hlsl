@@ -1,13 +1,15 @@
 #include "Obj.hlsli"
 
-Texture2D<float4> tex : register(t0);  // 0番スロットに設定されたテクスチャ
+Texture2D<float4> tex : register(t0); // 0番スロットに設定されたテクスチャ
 SamplerState smp : register(s0);      // 0番スロットに設定されたサンプラー
 
-float4 main(VSOutput input) : SV_TARGET
-{
+float4 main(VSOutput input) : SV_TARGET {
+	// UV変換
+	float2 uv = float2(
+	    input.uv.x * m_uv_scale.x + m_uv_offset.x, input.uv.y * m_uv_scale.y + m_uv_offset.y);
 	// テクスチャマッピング
-	float4 texcolor = tex.Sample(smp, input.uv);
-		
+	float4 texcolor = tex.Sample(smp, uv);
+
 	// 光沢度
 	const float shininess = 4.0f;
 	// 頂点から視点への方向ベクトル
@@ -45,7 +47,8 @@ float4 main(VSOutput input) : SV_TARGET
 			lightv = normalize(lightv);
 
 			// 距離減衰係数
-			float atten = 1.0f / (pointLights[i].lightatten.x + pointLights[i].lightatten.y * d + pointLights[i].lightatten.z *d*d);
+			float atten = 1.0f / (pointLights[i].lightatten.x + pointLights[i].lightatten.y * d +
+			                      pointLights[i].lightatten.z * d * d);
 
 			// ライトに向かうベクトルと法線の内積
 			float3 dotlightnormal = dot(lightv, input.normal);
@@ -70,13 +73,16 @@ float4 main(VSOutput input) : SV_TARGET
 			lightv = normalize(lightv);
 
 			// 距離減衰係数
-			float atten = saturate(1.0f / (spotLights[i].lightatten.x + spotLights[i].lightatten.y * d + spotLights[i].lightatten.z *d*d));
+			float atten = saturate(
+			    1.0f / (spotLights[i].lightatten.x + spotLights[i].lightatten.y * d +
+			            spotLights[i].lightatten.z * d * d));
 
 			// 角度減衰
 			float cos = dot(lightv, spotLights[i].lightv);
 			// 減衰開始角度から、減衰終了角度にかけて減衰
 			// 減衰開始角度の内側は1倍 減衰終了角度の外側は0倍の輝度
-			float angleatten = smoothstep(spotLights[i].lightfactoranglecos.y, spotLights[i].lightfactoranglecos.x, cos);
+			float angleatten = smoothstep(
+			    spotLights[i].lightfactoranglecos.y, spotLights[i].lightfactoranglecos.x, cos);
 			// 角度減衰を乗算
 			atten *= angleatten;
 
@@ -103,19 +109,23 @@ float4 main(VSOutput input) : SV_TARGET
 			float d = dot(casterv, circleShadows[i].dir);
 
 			// 距離減衰係数
-			float atten = saturate(1.0f / (circleShadows[i].atten.x + circleShadows[i].atten.y * d + circleShadows[i].atten.z *d*d));
+			float atten = saturate(
+			    1.0f / (circleShadows[i].atten.x + circleShadows[i].atten.y * d +
+			            circleShadows[i].atten.z * d * d));
 			// 距離がマイナスなら0にする
 			atten *= step(0, d);
 
 			// ライトの座標
-			float3 lightpos = circleShadows[i].casterPos + circleShadows[i].dir * circleShadows[i].distanceCasterLight;
+			float3 lightpos = circleShadows[i].casterPos +
+			                  circleShadows[i].dir * circleShadows[i].distanceCasterLight;
 			//  オブジェクト表面からライトへのベクトル（単位ベクトル）
 			float3 lightv = normalize(lightpos - input.worldpos.xyz);
 			// 角度減衰
 			float cos = dot(lightv, circleShadows[i].dir);
 			// 減衰開始角度から、減衰終了角度にかけて減衰
 			// 減衰開始角度の内側は1倍 減衰終了角度の外側は0倍の輝度
-			float angleatten = smoothstep(circleShadows[i].factorAngleCos.y, circleShadows[i].factorAngleCos.x, cos);
+			float angleatten = smoothstep(
+			    circleShadows[i].factorAngleCos.y, circleShadows[i].factorAngleCos.x, cos);
 			// 角度減衰を乗算
 			atten *= angleatten;
 
