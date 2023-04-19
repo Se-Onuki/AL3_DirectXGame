@@ -5,6 +5,8 @@
 #include "PrimitiveDrawer.h"
 #include "AxisIndicator.h"
 
+#include "Header/Entity/Entity.hpp"
+
 
 GameScene::GameScene() {}
 
@@ -22,8 +24,7 @@ void GameScene::Initialize() {
 
 	textureHandle_ = TextureManager::Load("Player/Player.png");
 	model_ = Model::CreateFromOBJ("Player",false);
-	//model_->Initialize("Object/Player/playerModel.obj", false);
-	//model_ = Model::Create();
+	
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -34,10 +35,13 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280, 720);
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+
+	player_.Init(model_, textureHandle_);
 }
 
 void GameScene::Update() {	
 	debugCamera_->Update();
+	player_.Update();
 }
 
 void GameScene::Draw() {
@@ -66,7 +70,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+	player_.Draw(debugCamera_->GetViewProjection());
+	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

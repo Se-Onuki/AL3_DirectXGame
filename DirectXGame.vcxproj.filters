@@ -52,6 +52,15 @@
     <Filter Include="ソース ファイル\2d">
       <UniqueIdentifier>{814a0f6d-f847-4c45-856d-4688fa4c9e6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Entity">
+      <UniqueIdentifier>{082389a5-9a6f-461e-91d4-b6c56df38087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\World">
+      <UniqueIdentifier>{1776e1db-3a00-4e5b-bf9f-50aa78dd2954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component">
+      <UniqueIdentifier>{4e0e6893-4620-46a4-8241-96b6a3738751}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -68,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\World\World.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Entity\Entity.hpp">
+      <Filter>ヘッダー ファイル\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Component\Component.cpp">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Entity\Entity.cpp">
+      <Filter>ヘッダー ファイル\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +176,12 @@
     <ClInclude Include="2d\ImGuiManager.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
+    <ClInclude Include="Header\World\World.hpp">
+      <Filter>ヘッダー ファイル\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Component\Component.hpp">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\SpritePS.hlsl">
@@ -203,6 +230,9 @@
     </None>
     <None Include="Resources\shaders\Terrain.hlsli">
       <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="Header\Entity\EntityManager.hpp">
+      <Filter>ヘッダー ファイル\Entity</Filter>
     </None>
   </ItemGroup>
 </Project>

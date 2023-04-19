@@ -11,6 +11,7 @@
 
 #include "DebugCamera.h"
 
+#include "Header/Entity/Entity.hpp"
 
 /// <summary>
 /// ゲームシーン
@@ -61,6 +62,7 @@ private: // メンバ変数
 	float inputFloat3[3] = {0, 0, 0};
 
 	DebugCamera* debugCamera_ = nullptr;
+	Entity player_ = {};
 
 	/// <summary>
 	/// ゲームシーン用
