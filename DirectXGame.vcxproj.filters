@@ -52,14 +52,11 @@
     <Filter Include="ソース ファイル\2d">
       <UniqueIdentifier>{814a0f6d-f847-4c45-856d-4688fa4c9e6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Entity">
-      <UniqueIdentifier>{082389a5-9a6f-461e-91d4-b6c56df38087}</UniqueIdentifier>
+    <Filter Include="Header">
+      <UniqueIdentifier>{ad4454df-ee4a-4af8-93e4-d538e640daa1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\World">
-      <UniqueIdentifier>{1776e1db-3a00-4e5b-bf9f-50aa78dd2954}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Component">
-      <UniqueIdentifier>{4e0e6893-4620-46a4-8241-96b6a3738751}</UniqueIdentifier>
+    <Filter Include="Header\Component">
+      <UniqueIdentifier>{a3277ddd-306c-4cc0-8e0f-5fefd014e3cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,17 +75,26 @@
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
-    <ClCompile Include="Header\World\World.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="math\Polar.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Entity\Entity.hpp">
-      <Filter>ヘッダー ファイル\Entity</Filter>
+    <ClCompile Include="math\Vector2.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Component\Component.cpp">
-      <Filter>ヘッダー ファイル\Component</Filter>
+    <ClCompile Include="math\Vector3.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Entity\Entity.cpp">
-      <Filter>ヘッダー ファイル\Entity</Filter>
+    <ClCompile Include="math\Math.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Matrix2x2.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Matrix3x3.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Matrix4x4.cpp">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,18 +155,6 @@
     <ClInclude Include="input\Input.h">
       <Filter>ヘッダー ファイル\input</Filter>
     </ClInclude>
-    <ClInclude Include="math\Matrix4x4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector3.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector2.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\Vector4.h">
-      <Filter>ヘッダー ファイル\math</Filter>
-    </ClInclude>
     <ClInclude Include="3d\AxisIndicator.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
@@ -176,11 +170,29 @@
     <ClInclude Include="2d\ImGuiManager.h">
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
-    <ClInclude Include="Header\World\World.hpp">
-      <Filter>ヘッダー ファイル\World</Filter>
+    <ClInclude Include="math\Matrix4x4.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Header\Component\Component.hpp">
-      <Filter>ヘッダー ファイル\Component</Filter>
+    <ClInclude Include="math\Polar.hpp">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector2.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vector4.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Math.hpp">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix2x2.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Matrix3x3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +242,6 @@
     </None>
     <None Include="Resources\shaders\Terrain.hlsli">
       <Filter>シェーダー ファイル</Filter>
-    </None>
-    <None Include="Header\Entity\EntityManager.hpp">
-      <Filter>ヘッダー ファイル\Entity</Filter>
     </None>
   </ItemGroup>
 </Project>
