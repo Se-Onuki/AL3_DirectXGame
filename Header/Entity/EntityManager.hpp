@@ -1,49 +1,40 @@
-//#pragma once
-//
-//#include "Header/Entity/Entity.hpp"
-//
-//class EntityManager {
-//public:
-//	static EntityManager& Instance() {
-//		static EntityManager instance;
-//		return instance;
-//	}
-//
-//	void AddEntity() {
-//		for (uint32_t i = lastEntityIndex; i < entities.size(); ++i) {
-//			if (!entities[i]) {
-//				entities[i] = true;
-//				lastEntityIndex = i;
-//				return;
-//			}
-//		}
-//		entities.push_back(true);
-//		lastEntityIndex = entities.size() - 1;
-//	}
-//
-//	void removeEntity(uint32_t index) {
-//		if (index < entities.size()) {
-//			entities[index] = false;
-//			if (index < lastEntityIndex) {
-//				lastEntityIndex = index;
-//			}
-//		}
-//	}
-//
-//	//void printEntities() const {
-//	//	std::cout << "entities: [";
-//	//	for (const auto& entity : entities) {
-//	//		std::cout << entity << ", ";
-//	//	}
-//	//	std::cout << "]" << std::endl;
-//	//	std::cout << lastEntityIndex << std::endl;
-//	//}
-//
-//private:
-//	EntityManager() : lastEntityIndex(0) {}
-//	EntityManager(const EntityManager&) = delete;
-//	EntityManager& operator=(const EntityManager&) = delete;
-//
-//	std::vector<bool> entities;
-//	uint32_t lastEntityIndex;
-//};
+#pragma once
+
+#include "Header/Entity/Entity.hpp"
+
+class World;
+class Archetype;
+
+class EntityManager {
+public:
+	EntityManager(World& world) : world_(world) {}
+
+	template<typename... Ts>
+	Entity CreateEntity() {
+		Entity entity(*this);
+		Archetype archetype;
+		(archetype.AddTypeInfo<Ts>(), ...);
+
+		auto chunkId = FindChunk(archetype);
+		if (chunkId != std::numeric_limits<uint32_t>::max()) {
+			entity.chunkId_ = chunkId;
+			entity.chunkIndex_ = world_.chunkList_[entity.chunkId_].Size();
+		} else {
+			entity.chunkId_ = world_.chunkList_.size();
+			entity.chunkIndex_ = 0;
+			Chunk chunk(archetype);
+			(chunk.AddComponent<Ts>(), ...);
+			world_.chunkList_.push_back(chunk);
+		}
+		return entity;
+	}
+
+	uint32_t FindChunk(const Archetype& archetype);
+
+	template<typename T> T& GetComponent(Entity entity) {
+		return world_.chunkList_[entity.chunkId_].Get<T>()[entity.chunkIndex_];
+	}
+
+private:
+	World& world_;
+};

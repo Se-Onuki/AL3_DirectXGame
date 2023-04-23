@@ -109,6 +109,11 @@
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
+    <ClCompile Include="Header\Chunk\Chunk.cpp" />
+    <ClCompile Include="Header\Component\Component.cpp" />
+    <ClCompile Include="Header\Entity\Entity.cpp" />
+    <ClCompile Include="Header\Entity\EntityManager.cpp" />
+    <ClCompile Include="Header\World\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Math.cpp" />
     <ClCompile Include="math\Matrix2x2.cpp" />
@@ -142,6 +147,11 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
+    <ClInclude Include="Header\Chunk\Chunk.hpp" />
+    <ClInclude Include="Header\Component\Component.hpp" />
+    <ClInclude Include="Header\Entity\Entity.hpp" />
+    <ClInclude Include="Header\Entity\EntityManager.hpp" />
+    <ClInclude Include="Header\World\World.hpp" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Math.hpp" />
     <ClInclude Include="math\Matrix2x2.h" />

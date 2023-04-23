@@ -3,39 +3,21 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
-struct IComponentData {};
+class ComponentData {};
 
-struct TransformComp : IComponentData {
+class TransformComp : ComponentData {
+public:
 	WorldTransform wTransform_;
 };
 
-struct ModelComp : IComponentData {
-	ModelComp(Model* model):model_(model){}
+class ModelComp : ComponentData {
+public:
+	ModelComp(Model* model) : model_(model) {}
 	Model* model_;
 };
 
-struct TextureComp : IComponentData {
+class TextureComp : ComponentData {
+public:
 	TextureComp(uint32_t texHandle) : texture_(texHandle) {}
 	uint32_t texture_;
-};/*
-
-class Component {
-public:
-	Component();
-	~Component();
-
-private:
 };
-
-
-class Transform :public Component{
-public:
-	Transform();
-	~Transform();
-
-	Vector3 position;
-	Vector3 scale;
-	Vector3 rotate;
-
-private:
-};*/

@@ -58,6 +58,15 @@
     <Filter Include="Header\Component">
       <UniqueIdentifier>{a3277ddd-306c-4cc0-8e0f-5fefd014e3cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Entity">
+      <UniqueIdentifier>{8f1cf1e1-d71d-40bd-b21c-b501207bdc73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\World">
+      <UniqueIdentifier>{5377ed83-0263-4828-813b-2fd2d0ea24d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Chunk">
+      <UniqueIdentifier>{38f1c56d-3562-4a58-b93f-f10e2ed265f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -95,6 +104,21 @@
     </ClCompile>
     <ClCompile Include="math\Matrix4x4.cpp">
       <Filter>ヘッダー ファイル\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Component\Component.cpp">
+      <Filter>Header\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Entity\Entity.cpp">
+      <Filter>Header\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\World\World.cpp">
+      <Filter>Header\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Chunk\Chunk.cpp">
+      <Filter>Header\Chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Entity\EntityManager.cpp">
+      <Filter>Header\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +217,21 @@
     </ClInclude>
     <ClInclude Include="math\Matrix3x3.h">
       <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Component\Component.hpp">
+      <Filter>Header\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Entity\Entity.hpp">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Entity\EntityManager.hpp">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\World\World.hpp">
+      <Filter>Header\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Chunk\Chunk.hpp">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

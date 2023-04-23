@@ -1,35 +1,10 @@
 #pragma once
-#include <string>
-#include <unordered_map>
-#include <vector>
-#include "Model.h"
-
-#include "ViewProjection.h"
-#include "Header/Component/Component.hpp"
-
-//struct IComponentData;
+#include <cstdint>
 
 class Entity {
 public:
-	Entity();
-	 ~Entity();
+	uint32_t chunkId_;
+	uint32_t chunkIndex_;
 
-	std::unordered_map<std::string, IComponentData*> componentList_;
-
-	 void Init(Model* model_, uint32_t textureHandle);
-
-	 void Update();
-	 void Draw(const ViewProjection& vProjection);
-
-private:
+	//template<typename T> T& GetComp();
 };
-
-//
-// class Entity {
-// public:
-//	Entity(int32_t id) : id(id) {}
-//	~Entity();
-//	const int32_t id;
-//
-// private:
-//};
