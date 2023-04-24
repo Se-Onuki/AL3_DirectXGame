@@ -4,7 +4,7 @@
 class Matrix2x2;
 class Matrix3x3;
 
-class Vector2 {
+struct Vector2 {
 public:
 	Vector2(float x = 0.f, float y = 0.f);
 
