@@ -3,6 +3,8 @@
 #include <cassert>
 #include <imgui.h>
 
+#include <random>
+
 #include "Math.hpp"
 
 #include "Header/Component/Component.hpp"
@@ -11,7 +13,7 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { delete sprite_; }
 
 void GameScene::Initialize() {
 
@@ -19,22 +21,23 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("Player/Player.png");
+	textureHandle_ = TextureManager::Load("uvChecker.png");
+	sprite_ = Sprite::Create(textureHandle_, {0,0});
 
 	EntityManager* eManager = world.GetEntityManager();
-	Entity entity = eManager->CreateEntity<PositionComp, VelocityComp>();
-	PositionComp pos;
-	pos.poistion_ = {100, 1003};
-	VelocityComp velo;
-	velo.velocity_ = {1,-10};
-	eManager->SetComponent(entity, pos);
-	eManager->SetComponent(entity, velo);
 
-	auto& test = eManager->GetComponent<PositionComp>(entity);
+	Entity entity = eManager->CreateEntity<VelocityComp, SpriteComp>();
+	VelocityComp velo;
+	velo.velocity_ = {};
+	//SpriteComp sprite(Sprite::Create(textureHandle_, {0, 0}));
+	eManager->SetComponent(entity, velo);
+	//eManager->SetComponent(entity, sprite);
 }
 
 void GameScene::Update() {
-	world.ForEach<PositionComp, VelocityComp>([](PositionComp& pos, VelocityComp& velo) { pos.poistion_ += velo.velocity_; });
+/*	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {
+		sprite.sprite_->SetPosition(sprite.sprite_->GetPosition() + velo.velocity_);
+	});*/
 }
 
 void GameScene::Draw() {
@@ -75,6 +78,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	//world.ForEach<SpriteComp>([](SpriteComp& sprite) { sprite.sprite_->Draw(); });
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

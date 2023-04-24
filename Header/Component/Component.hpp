@@ -27,8 +27,10 @@ public:
 
 class SpriteComp : ComponentData {
 public:
+	SpriteComp() {}
 	SpriteComp(Sprite* spritePtr) : sprite_(spritePtr) {}
-	Sprite* sprite_;
+	~SpriteComp() { delete sprite_; }
+	Sprite* sprite_ = nullptr;
 };
 
 class PositionComp : ComponentData {
