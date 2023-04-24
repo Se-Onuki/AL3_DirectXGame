@@ -79,7 +79,7 @@ public:
 	void ChankDelete() {
 		for (auto& element : componentList_) {
 			if (element.second != nullptr) {
-				
+				free(element.second);
 			}
 		}
 	}

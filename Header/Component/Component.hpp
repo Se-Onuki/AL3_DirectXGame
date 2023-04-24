@@ -5,6 +5,67 @@
 #include "Sprite.h"
 
 #include "Vector2.h"
+#include <memory>
+
+#include <string>
+#include <unordered_map>
+
+
+class ModelManager {
+public:
+	static ModelManager& getInstance() {
+		static ModelManager instance;
+		return instance;
+	}
+
+	~ModelManager() {
+		for (auto& pair : models) {
+			delete pair.second;
+		}
+	}
+
+	Model* getModel(const std::string& key) {
+		auto it = models.find(key);
+		if (it != models.end()) {
+			return it->second;
+		}
+		return nullptr;
+	}
+
+	void addModel(const std::string& key, Model* model) { models[key] = model; }
+
+private:
+	ModelManager() {}
+	std::unordered_map<std::string, Model*> models;
+};
+
+class SpriteManager {
+public:
+	static SpriteManager& getInstance() {
+		static SpriteManager instance;
+		return instance;
+	}
+
+	~SpriteManager() {
+		for (auto& pair : sprites) {
+			delete pair.second;
+		}
+	}
+
+	Sprite* getSprite(const std::string& key) {
+		auto it = sprites.find(key);
+		if (it != sprites.end()) {
+			return it->second;
+		}
+		return nullptr;
+	}
+
+	void addSprite(const std::string& key, Sprite* sprite) { sprites[key] = sprite; }
+
+private:
+	SpriteManager() {}
+	std::unordered_map<std::string, Sprite*> sprites;
+};
 
 class ComponentData {};
 
@@ -29,7 +90,8 @@ class SpriteComp : ComponentData {
 public:
 	SpriteComp() {}
 	SpriteComp(Sprite* spritePtr) : sprite_(spritePtr) {}
-	~SpriteComp() { delete sprite_; }
+	~SpriteComp() { 
+	}
 	Sprite* sprite_ = nullptr;
 };
 

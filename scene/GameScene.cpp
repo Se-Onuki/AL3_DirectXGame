@@ -13,31 +13,42 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { delete sprite_; }
+GameScene::~GameScene() {
+	for (auto& element : spriteList_) {
+		if (element)
+			delete element;
+	}
+}
 
 void GameScene::Initialize() {
+
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-	textureHandle_ = TextureManager::Load("uvChecker.png");
-	sprite_ = Sprite::Create(textureHandle_, {0,0});
-
-	EntityManager* eManager = world.GetEntityManager();
-
-	Entity entity = eManager->CreateEntity<VelocityComp, SpriteComp>();
-	VelocityComp velo;
-	velo.velocity_ = {};
-	//SpriteComp sprite(Sprite::Create(textureHandle_, {0, 0}));
-	eManager->SetComponent(entity, velo);
-	//eManager->SetComponent(entity, sprite);
+	textureHandle_ = TextureManager::Load("Player/Ball.png");
 }
 
 void GameScene::Update() {
-/*	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<float> dist(0.5f, 2.f);
+
+	static uint32_t time = 0;
+	if (time++ < 600) {
+		EntityManager* eManager = world.GetEntityManager();
+
+		Entity entity = eManager->CreateEntity<VelocityComp, SpriteComp>();
+		VelocityComp velo;
+		velo.velocity_ = {dist(gen), dist(gen)};
+		SpriteComp sprite(Sprite::Create(textureHandle_, {0, 0}));
+		spriteList_.push_back(sprite.sprite_);
+		eManager->SetComponent(entity, velo);
+		eManager->SetComponent(entity, sprite);
+	}
+	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {
 		sprite.sprite_->SetPosition(sprite.sprite_->GetPosition() + velo.velocity_);
-	});*/
+	});
 }
 
 void GameScene::Draw() {
@@ -78,8 +89,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	//world.ForEach<SpriteComp>([](SpriteComp& sprite) { sprite.sprite_->Draw(); });
-	sprite_->Draw();
+	world.ForEach<SpriteComp>([](SpriteComp& sprite) { sprite.sprite_->Draw(); });
+	// sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

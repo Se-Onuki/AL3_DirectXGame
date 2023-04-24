@@ -50,6 +50,8 @@ private: // メンバ変数
 	
 	World world = {};
 
+	std::vector<Sprite*> spriteList_ = {};
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
