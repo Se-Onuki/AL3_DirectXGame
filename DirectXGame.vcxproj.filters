@@ -231,7 +231,7 @@
       <Filter>Header\World</Filter>
     </ClInclude>
     <ClInclude Include="Header\Chunk\Chunk.hpp">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Header\Chunk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

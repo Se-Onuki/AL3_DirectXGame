@@ -1,15 +1,11 @@
 #include "World.hpp"
+#include "Header/Entity/EntityManager.hpp"
 
+World::World() { entityManager_ = new EntityManager(this); }
 
-
-World::World() {}
-
-World::~World() {}
-
-EntityManager* World::GetEntityManager() const { return entityManager_; }
-
-void World::Update() {
-	//for (auto&& system : systemList_) {
-	//	system->onUpdate();
-	//}
+World::~World() { 
+	delete entityManager_;
+	for (auto& element : chunkList_) {
+		element.ChankDelete();
+	}
 }

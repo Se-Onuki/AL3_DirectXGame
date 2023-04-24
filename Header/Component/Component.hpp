@@ -2,6 +2,9 @@
 #include "Vector3.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Sprite.h"
+
+#include "Vector2.h"
 
 class ComponentData {};
 
@@ -20,4 +23,20 @@ class TextureComp : ComponentData {
 public:
 	TextureComp(uint32_t texHandle) : texture_(texHandle) {}
 	uint32_t texture_;
+};
+
+class SpriteComp : ComponentData {
+public:
+	SpriteComp(Sprite* spritePtr) : sprite_(spritePtr) {}
+	Sprite* sprite_;
+};
+
+class PositionComp : ComponentData {
+public:
+	Vector2 poistion_;
+};
+
+class VelocityComp : ComponentData {
+public:
+	Vector2 velocity_;
 };

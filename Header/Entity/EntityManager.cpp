@@ -1,12 +1,27 @@
-#include "EntityManager.hpp"
+#include "Header/Entity/EntityManager.hpp"
 
 #include "Header/World/World.hpp"
+#include <limits>
 
-uint32_t EntityManager::FindChunk(const Archetype& archetype) {
-	for (uint32_t i = 0; i < world_.chunkList_.size(); ++i) {
-		if (world_.chunkList_[i].GetArchetype() == archetype) {
+EntityManager::EntityManager(World* world) : world_(world) {}
+
+uint32_t EntityManager::FindMatchChunk(const Archetype& archetype) {
+	for (uint32_t i = 0; i < world_->chunkList_.size(); ++i) {
+		if (world_->chunkList_[i].GetArchetype() == archetype) {
 			return i;
 		}
 	}
-	return std::numeric_limits<uint32_t>::max();
+	return UINT32_MAX;
 }
+
+//
+//std::vector<Chunk&> EntityManager::FindHitChunk(const Archetype& archetype) {
+//	std::vector<Chunk&> output = {};
+//	for (uint32_t i = 0; i < world_->chunkList_.size(); ++i) {
+//		if (archetype <= world_->chunkList_[i].GetArchetype()) {
+//			output.push_back(world_->chunkList_[i]);
+//		}
+//	}
+//	return output;
+//}
+//

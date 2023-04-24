@@ -2,20 +2,16 @@
 #include "TextureManager.h"
 #include <cassert>
 #include <imgui.h>
-#include "PrimitiveDrawer.h"
-#include "AxisIndicator.h"
 
 #include "Math.hpp"
 
-
+#include "Header/Component/Component.hpp"
+#include "Header/Entity/EntityManager.hpp"
+#include "Header/World/World.hpp"
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
-	delete sprite_;
-	delete model_;
-	delete debugCamera_;
-}
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 
@@ -24,23 +20,21 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	textureHandle_ = TextureManager::Load("Player/Player.png");
-	model_ = Model::CreateFromOBJ("Player",false);
-	
 
-	worldTransform_.Initialize();
-	viewProjection_.Initialize();
+	EntityManager* eManager = world.GetEntityManager();
+	Entity entity = eManager->CreateEntity<PositionComp, VelocityComp>();
+	PositionComp pos;
+	pos.poistion_ = {100, 1003};
+	VelocityComp velo;
+	velo.velocity_ = {1,-10};
+	eManager->SetComponent(entity, pos);
+	eManager->SetComponent(entity, velo);
 
-	soundDataHandle_ = audio_->LoadWave("mokugyo.wav");
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
-	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
-	debugCamera_ = new DebugCamera(1280, 720);
-	AxisIndicator::GetInstance()->SetVisible(true);
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
-
+	auto& test = eManager->GetComponent<PositionComp>(entity);
 }
 
-void GameScene::Update() {	
-	debugCamera_->Update();
+void GameScene::Update() {
+	world.ForEach<PositionComp, VelocityComp>([](PositionComp& pos, VelocityComp& velo) { pos.poistion_ += velo.velocity_; });
 }
 
 void GameScene::Draw() {
@@ -69,8 +63,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	//player_.Draw(debugCamera_->GetViewProjection());
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
