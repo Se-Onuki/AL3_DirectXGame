@@ -17,7 +17,7 @@ class Archetype {
 public:
 	std::unordered_set<std::type_index> typeHash_;
 	std::unordered_map<std::type_index, std::size_t> typeSize_;
-	std::unordered_map<std::type_index, std::byte[]> typeByte_;
+	
 
 	Archetype() {}
 
@@ -47,11 +47,6 @@ public:
 	template<typename... Ts> Chunk() { (AddComponent<Ts>(), ...); }
 	~Chunk() { 
 	}
-
-	/*Chunk(const Archetype &archetype) { 
-		maxCount_;
-	}*/
-
 
 	template<typename T> void AddComponent();
 
@@ -88,14 +83,15 @@ public:
 
 	uint32_t EntityCount() { return entityCount_; }
 	uint32_t entityCount_ = 0;
-	uint32_t maxCount_ = 1000;
+	uint32_t maxCount_ = 1;
 
 private:
 	Archetype archetype_;
 	std::unordered_map<std::type_index, void*> componentList_ = {};
 };
 
-template<typename T> inline void Chunk::AddComponent() {
+template<typename T> 
+inline void Chunk::AddComponent() {
 	archetype_.AddTypeInfo<T>();
 	std::type_index typeData = std::type_index(typeid(T));
 	componentList_[typeData] = malloc(archetype_.typeSize_[typeData] * maxCount_);

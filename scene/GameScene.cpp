@@ -21,8 +21,6 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
-
-
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -46,6 +44,8 @@ void GameScene::Update() {
 		eManager->SetComponent(entity, velo);
 		eManager->SetComponent(entity, sprite);
 	}
+
+
 	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {
 		sprite.sprite_->SetPosition(sprite.sprite_->GetPosition() + velo.velocity_);
 	});
@@ -90,7 +90,6 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 	world.ForEach<SpriteComp>([](SpriteComp& sprite) { sprite.sprite_->Draw(); });
-	// sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

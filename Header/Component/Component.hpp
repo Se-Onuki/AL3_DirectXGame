@@ -80,12 +80,6 @@ public:
 	Model* model_;
 };
 
-class TextureComp : ComponentData {
-public:
-	TextureComp(uint32_t texHandle) : texture_(texHandle) {}
-	uint32_t texture_;
-};
-
 class SpriteComp : ComponentData {
 public:
 	SpriteComp() {}
@@ -93,6 +87,12 @@ public:
 	~SpriteComp() { 
 	}
 	Sprite* sprite_ = nullptr;
+};
+
+class TextureComp : ComponentData {
+public:
+	TextureComp(uint32_t texHandle) : texture_(texHandle) {}
+	uint32_t texture_;
 };
 
 class PositionComp : ComponentData {
