@@ -10,7 +10,7 @@
 #include "WorldTransform.h"
 
 #include "DebugCamera.h"
-
+#include "Header/Entity/Entity.hpp"
 
 
 /// <summary>
@@ -62,6 +62,8 @@ private: // メンバ変数
 	float inputFloat3[3] = {0, 0, 0};
 
 	DebugCamera* debugCamera_ = nullptr;
+
+	Entity player_;
 	
 
 	/// <summary>

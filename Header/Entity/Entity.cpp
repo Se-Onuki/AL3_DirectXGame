@@ -1,8 +1,7 @@
 #include"Entity.hpp"
 
-#include "Header/World/World.hpp"
+void Entity::Init() {}
 
-//template<typename T> 
-//T& Entity::GetComp() {
-//	
-//}
+void Entity::Update() {}
+
+void Entity::Draw() {}

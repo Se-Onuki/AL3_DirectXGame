@@ -110,3 +110,17 @@ public:
 
 private:
 };
+
+inline float* operator<<(float A[3], const Vector3& B) {
+	A[0] = B.x;
+	A[1] = B.y;
+	A[2] = B.z;
+	return A;
+}
+
+inline Vector3& operator<<(Vector3& A, const float B[3]) {
+	A.x = B[0];
+	A.y = B[1];
+	A.z = B[2];
+	return A;
+}
