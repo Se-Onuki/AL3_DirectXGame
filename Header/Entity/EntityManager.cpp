@@ -5,15 +5,6 @@
 
 EntityManager::EntityManager(World* world) : world_(world) {}
 
-uint32_t EntityManager::FindMatchChunk(const Archetype& archetype) {
-	for (uint32_t i = 0; i < world_->chunkList_.size(); ++i) {
-		if (world_->chunkList_[i].GetArchetype() == archetype) {
-			return i;
-		}
-	}
-	return UINT32_MAX;
-}
-
 //
 //std::vector<Chunk&> EntityManager::FindHitChunk(const Archetype& archetype) {
 //	std::vector<Chunk&> output = {};

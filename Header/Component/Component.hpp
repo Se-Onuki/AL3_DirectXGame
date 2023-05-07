@@ -19,24 +19,24 @@ public:
 	}
 
 	~ModelManager() {
-		for (auto& pair : models) {
+		for (auto& pair : models_) {
 			delete pair.second;
 		}
 	}
 
 	Model* getModel(const std::string& key) {
-		auto it = models.find(key);
-		if (it != models.end()) {
+		auto it = models_.find(key);
+		if (it != models_.end()) {
 			return it->second;
 		}
 		return nullptr;
 	}
 
-	void addModel(const std::string& key, Model* model) { models[key] = model; }
+	void addModel(const std::string& key, Model* model) { models_[key] = model; }
 
 private:
 	ModelManager() {}
-	std::unordered_map<std::string, Model*> models;
+	std::unordered_map<std::string, Model*> models_;
 };
 
 class SpriteManager {
@@ -86,7 +86,10 @@ public:
 	SpriteComp(Sprite* spritePtr) : sprite_(spritePtr) {}
 	~SpriteComp() { 
 	}
-	Sprite* sprite_ = nullptr;
+	SpriteComp(SpriteComp &sec) {
+		this->sprite_ = std::move(sec.sprite_);
+	}
+	std::unique_ptr<Sprite> sprite_ = nullptr;
 };
 
 class TextureComp : ComponentData {

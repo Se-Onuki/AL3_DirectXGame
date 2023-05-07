@@ -32,7 +32,7 @@ void GameScene::Update() {
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dist(0.5f, 2.f);
 
-	static uint32_t time = 0;
+	/*static uint32_t time = 0;
 	if (time++ < 600) {
 		EntityManager* eManager = world.GetEntityManager();
 
@@ -40,10 +40,9 @@ void GameScene::Update() {
 		VelocityComp velo;
 		velo.velocity_ = {dist(gen), dist(gen)};
 		SpriteComp sprite(Sprite::Create(textureHandle_, {0, 0}));
-		spriteList_.push_back(sprite.sprite_);
 		eManager->SetComponent(entity, velo);
 		eManager->SetComponent(entity, sprite);
-	}
+	}*/
 
 
 	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {

@@ -113,6 +113,7 @@
     <ClCompile Include="Header\Component\Component.cpp" />
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\EntityManager.cpp" />
+    <ClCompile Include="Header\ModelManager\ModelManager.cpp" />
     <ClCompile Include="Header\World\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Math.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Header\Component\Component.hpp" />
     <ClInclude Include="Header\Entity\Entity.hpp" />
     <ClInclude Include="Header\Entity\EntityManager.hpp" />
+    <ClInclude Include="Header\ModelManager\ModelManager.hpp" />
     <ClInclude Include="Header\World\World.hpp" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Math.hpp" />
