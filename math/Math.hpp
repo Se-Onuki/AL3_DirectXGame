@@ -1,15 +1,10 @@
 #pragma once
 
-#include"Vector2.h"
-#include"Vector3.h"
-#include "Polar.hpp"
+#include "Vector2.h"
+#include "Polar.h"
 #include "Matrix2x2.h"
 #include "Matrix3x3.h"
 #include "Matrix4x4.h"
-
-
-static const int TextHeight = 20;
-static const int TextWidth = 56;
 
 
 /// <summary>

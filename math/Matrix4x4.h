@@ -3,6 +3,12 @@
 struct Vector3;
 
 struct Matrix4x4 {
+	enum EulerAngle {
+		Pitch, // x軸
+		Yaw,   // y軸
+		Roll   // z軸
+	};
+
 	inline Matrix4x4()
 	    : m{
 	          {0, 0, 0, 0},
@@ -12,10 +18,8 @@ struct Matrix4x4 {
     } {}
 
 	inline Matrix4x4(
-	    float A, float B, float C, float D,
-		float E, float F, float G, float H,
-		float I, float J, float K, float L, 
-		float M, float N, float O, float P)
+	    float A, float B, float C, float D, float E, float F, float G, float H, float I, float J,
+	    float K, float L, float M, float N, float O, float P)
 	    : m{
 	          {A, B, C, D},
               {E, F, G, H},
@@ -27,16 +31,12 @@ struct Matrix4x4 {
 
 	//void Printf(const int& x, const int& y) const;
 
-	/// <summary>
-	/// 逆行列関数
-	/// </summary>
-	/// <returns>逆行列</returns>
+	/// @brief 逆行列関数
+	/// @return 逆行列
 	Matrix4x4 Inverse();
 
-	/// <summary>
-	/// 転置行列
-	/// </summary>
-	/// <returns>転置行列</returns>
+	/// @brief 転置行列関数
+	/// @return 転置行列
 	Matrix4x4 Transpose();
 
 	Matrix4x4 operator+(const Matrix4x4& Second) const;
@@ -57,10 +57,15 @@ struct Matrix4x4 {
 	Matrix4x4 operator*=(const float& Second);
 	Matrix4x4 operator/=(const float& Second);
 
-	/// <summary>
-	/// 単位行列
-	/// </summary>
-	/// <returns>単位行列</returns>
+	bool operator==(const Matrix4x4& Second) { return *this == Second; }
+
+	static Matrix4x4 Affine(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+	static Matrix4x4 EulerRotate(EulerAngle, float angle);
+	static Matrix4x4 EulerRotate(const Vector3& angle);
+
+	/// @brief 単位行列関数
+	/// @return 単位行列
 	static Matrix4x4 Identity() {
 		return Matrix4x4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 	}

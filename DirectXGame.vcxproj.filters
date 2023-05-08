@@ -120,6 +120,9 @@
     <ClCompile Include="Header\Entity\EntityManager.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Header\ModelManager\ModelManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -197,7 +200,7 @@
     <ClInclude Include="math\Matrix4x4.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="math\Polar.hpp">
+    <ClInclude Include="math\Polar.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
     <ClInclude Include="math\Vector2.h">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="Header\Chunk\Chunk.hpp">
       <Filter>Header\Chunk</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\ModelManager\ModelManager.hpp">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

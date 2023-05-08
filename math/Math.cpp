@@ -5,10 +5,9 @@
 
 #include "Vector2.h"
 #include "Vector3.h"
-#include "Polar.hpp"
+#include "Polar.h"
 
 #include <assert.h>
-
 
 
 float DotProduct(Vector2 startA, Vector2 endA, Vector2 startB, Vector2 endB) {

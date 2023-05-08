@@ -42,6 +42,15 @@
 
 struct ComponentData {};
 
+struct Identifier : ComponentData {
+	char name[10];
+	void Init(const char * value) { 
+		for (uint32_t i = 0; i < 10; i++) {
+			name[i] = value[i];
+		}
+	}
+};
+
 struct TransformComp : ComponentData {
 	WorldTransform wTransform_;
 };
@@ -55,8 +64,10 @@ struct ModelComp : ComponentData {
 };
 
 struct SpriteComp : ComponentData {
-	SpriteComp() {}
-	SpriteComp(const std::string& key, Sprite* value) : sprite_(std::hash<std::string>{}(key)) {}
+	void Init(const std::string& key, Sprite* value) {
+		sprite_ = std::hash<std::string>{}(key);
+		SpriteManager::GetInstance()->AddSprite(sprite_, value);
+	}
 	spriteHash sprite_;
 };
 
@@ -71,3 +82,5 @@ struct PositionComp : ComponentData {
 struct VelocityComp : ComponentData {
 	Vector3 velocity_;
 };
+
+struct InputFlagComp : ComponentData {};

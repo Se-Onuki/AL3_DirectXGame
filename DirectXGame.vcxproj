@@ -159,7 +159,7 @@
     <ClInclude Include="math\Matrix2x2.h" />
     <ClInclude Include="math\Matrix3x3.h" />
     <ClInclude Include="math\Matrix4x4.h" />
-    <ClInclude Include="math\Polar.hpp" />
+    <ClInclude Include="math\Polar.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
