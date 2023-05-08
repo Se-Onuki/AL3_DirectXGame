@@ -3,56 +3,58 @@
 #include <unordered_map>
 
 #include "Model.h"
+#include "Sprite.h"
 
 using modelHash = size_t;
+using spriteHash = size_t;
 
 class ModelManager {
 public:
-	static ModelManager& GetInstance() {
+	static ModelManager* GetInstance() {
 		static ModelManager instance;
-		return instance;
+		return &instance;
 	}
 
 	~ModelManager() { RemoveAll(); }
-	/// @brief ƒ‚ƒfƒ‹‚Ì’Ç‰Á
-	/// @param key •¶š—ñƒL[
-	/// @param model ƒ‚ƒfƒ‹ƒf[ƒ^
+	/// @brief ãƒ¢ãƒ‡ãƒ«ã®è¿½åŠ 
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
+	/// @param model ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
 	void AddModel(const std::string& key, Model* model) {
 		modelHash hash = std::hash<std::string>{}(key);
 		models_[hash] = model;
 	}
-	/// @brief ƒ‚ƒfƒ‹‚Ì’Ç‰Á
-	/// @param hash •¶š—ñƒnƒbƒVƒ…’l
-	/// @param model ƒ‚ƒfƒ‹ƒf[ƒ^
+	/// @brief ãƒ¢ãƒ‡ãƒ«ã®è¿½åŠ 
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
+	/// @param model ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
 	void AddModel(const modelHash& hash, Model* model) { models_[hash] = model; }
 
-	/// @brief ƒ‚ƒfƒ‹ƒf[ƒ^‚Ìæ“¾
-	/// @param key •¶š—ñƒL[
-	/// @return ƒ‚ƒfƒ‹ƒf[ƒ^
+	/// @brief ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®å–å¾—
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
+	/// @return ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
 	Model* GetModel(const std::string& key) {
 		modelHash hash = std::hash<std::string>{}(key);
 		return models_[hash];
 	}
-	/// @brief ƒ‚ƒfƒ‹ƒf[ƒ^‚Ìæ“¾
-	/// @param hash •¶š—ñƒnƒbƒVƒ…’l
-	/// @return ƒ‚ƒfƒ‹ƒf[ƒ^
+	/// @brief ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®å–å¾—
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
+	/// @return ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
 	Model* GetModel(const modelHash& hash) { return models_[hash]; }
 
-	/// @brief ƒ‚ƒfƒ‹ƒf[ƒ^‚Ì”jŠü
-	/// @param key •¶š—ñƒL[
+	/// @brief ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
 	void removeModel(const std::string& key) {
 		modelHash hash = std::hash<std::string>{}(key);
 		RemoveModel(hash);
 	}
 
-	/// @brief ƒ‚ƒfƒ‹”jŠü
-	/// @param hash •¶š—ñƒnƒbƒVƒ…’l
+	/// @brief ãƒ¢ãƒ‡ãƒ«ç ´æ£„
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
 	void RemoveModel(const modelHash& hash) {
 		delete models_[hash];
 		models_.erase(hash);
 	}
 
-	/// @brief ‘S‚Ä‚Ìƒ‚ƒfƒ‹ƒf[ƒ^‚Ì”jŠü
+	/// @brief å…¨ã¦ã®ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„
 	void RemoveAll() {
 		for (auto& element : models_) {
 			delete element.second;
@@ -60,9 +62,71 @@ public:
 		models_.clear();
 	}
 
+	std::unordered_map<modelHash, Model*> models_;
+
 private:
 	ModelManager() {}
 	ModelManager(const ModelManager&) = delete;
-	// ƒ‚ƒfƒ‹ƒ}ƒbƒv
-	std::unordered_map<modelHash, Model*> models_;
+	// ãƒ¢ãƒ‡ãƒ«ãƒãƒƒãƒ—
+};
+
+class SpriteManager {
+public:
+	static SpriteManager* GetInstance() {
+		static SpriteManager instance;
+		return &instance;
+	}
+
+	~SpriteManager() { RemoveAll(); }
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è¿½åŠ 
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
+	/// @param sprite ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿
+	void AddSprite(const std::string& key, Sprite* sprite) {
+		spriteHash hash = std::hash<std::string>{}(key);
+		sprites_[hash] = sprite;
+	}
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è¿½åŠ 
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
+	/// @param sprite ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿
+	void AddSprite(const spriteHash& hash, Sprite* sprite) { sprites_[hash] = sprite; }
+
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®å–å¾—
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
+	/// @return ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿
+	Sprite* GetSprite(const std::string& key) {
+		spriteHash hash = std::hash<std::string>{}(key);
+		return sprites_[hash];
+	}
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®å–å¾—
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
+	/// @return ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿
+	Sprite* GetSprite(const spriteHash& hash) { return sprites_[hash]; }
+
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„
+	/// @param key æ–‡å­—åˆ—ã‚­ãƒ¼
+	void removeSprite(const std::string& key) {
+		spriteHash hash = std::hash<std::string>{}(key);
+		RemoveSprite(hash);
+	}
+
+	/// @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆç ´æ£„
+	/// @param hash æ–‡å­—åˆ—ãƒãƒƒã‚·ãƒ¥å€¤
+	void RemoveSprite(const spriteHash& hash) {
+		delete sprites_[hash];
+		sprites_.erase(hash);
+	}
+
+	/// @brief å…¨ã¦ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®ç ´æ£„
+	void RemoveAll() {
+		for (auto& element : sprites_) {
+			delete element.second;
+		}
+		sprites_.clear();
+	}
+
+private:
+	SpriteManager() {}
+	SpriteManager(const SpriteManager&) = delete;
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—
+	std::unordered_map<spriteHash, Sprite*> sprites_;
 };

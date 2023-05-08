@@ -15,132 +15,164 @@
 
 class Entity;
 
+using classHash = size_t;
+
 class ClassData {
 public:
-	std::type_index type_;
+	classHash type_;
 	size_t size_;
-	void (*constructor_)(void*);
-	void (*destructor_)(void*);
 
 	template<typename T> static ClassData Create() {
-		return {
-		    std::type_index(typeid(T)), sizeof(T), [](void* ptr) { new (ptr) T(); },
-		    [](void* ptr) { (static_cast<T*>(ptr))->~T(); }};
+		return {std::hash<std::string>()(typeid(T).name()), sizeof(T)};
+	}
+
+	bool operator==(const ClassData& other) const {
+		return (type_ == other.type_ && size_ == other.size_);
 	}
 };
 
-class MyArray {
+class CustomArray {
 public:
-	MyArray(const ClassData& classData, uint32_t size = 1)
-	    : maxSize_(size), data_(nullptr), classData_(classData), nowSize_(0) {
-		data_ = malloc(size * classData_.size_);
-		for (uint32_t i = 0; i < size; i++) {
-			void* ptr = static_cast<char*>(data_) + i * classData_.size_;
-			classData_.constructor_(ptr);
-		}
-	}
+	CustomArray() : maxSize_(1), data_(nullptr), classData_({}), nowSize_(0) {}
 
-	~MyArray() {
+	~CustomArray() { Delete(); }
+
+	void Delete() {
 		if (data_) {
-			for (uint32_t i = 0; i < maxSize_; i++) {
-				void* ptr = static_cast<char*>(data_) + i * classData_.size_;
-				classData_.destructor_(ptr);
-			}
 			free(data_);
 		}
 	}
 
+	void Init(const ClassData& classData, uint32_t size = 1) {
+		Delete();
+		maxSize_ = size;
+		classData_ = classData;
+		nowSize_ = 0;
+		data_ = malloc(size * classData_.size_);
+	}
+
 	bool Resize(uint32_t newSize) {
-		if (newSize <= maxSize_) {
+		if (newSize <= maxSize_) // サイズが小さかった場合は無効
 			return true;
-		}
+
 		void* newData = realloc(data_, newSize * classData_.size_);
-		if (!newData) {
+		if (!newData) // 取得に失敗した場合は無効
 			return false;
-		}
+
 		data_ = newData;
-		for (uint32_t i = maxSize_; i < newSize; i++) {
-			void* ptr = static_cast<char*>(data_) + i * classData_.size_;
-			classData_.constructor_(ptr);
-		}
 		maxSize_ = newSize;
+		return true; // 拡大成功
+	}
+
+	template<typename T> bool push_back() {
+		if (nowSize_ == maxSize_) {
+			if (!Resize(maxSize_ * 2))
+				return false;
+		}
+		nowSize_++;
+		void* ptr = (*this)[nowSize_ - 1];
+		new (ptr) T();
 		return true;
 	}
 
-	template<typename T>
-	void push_back(const T& value) {
+	template<typename T> bool push_back(const T& value) {
 		if (nowSize_ == maxSize_) {
-			Resize(maxSize_ * 2);
+			if (!Resize(maxSize_ * 2))
+				return false;
 		}
-		void* ptr = static_cast<char*>(data_) + nowSize_ * classData_.size_;
-		new (ptr) T(value);
 		nowSize_++;
+		void* ptr = (*this)[nowSize_-1];
+		set(nowSize_-1, value);
+		return true;
 	}
 
-	/// @brief �v�f�̓���ւ�
-	/// @param index1 �v�fA
-	/// @param index2 �v�fB
-	/// @return ����ւ��̐���
+	/// @brief 要素の入れ替え
+	/// @param index1 要素A
+	/// @param index2 要素B
+	/// @return 入れ替えの成否
 	bool swap(uint32_t index1, uint32_t index2) {
-		if (index1 >= nowSize_ || index2 >= nowSize_) {
+		if (empty() || index1 >= nowSize_ ||
+		    index2 >= nowSize_) { // 保存量が0 or 添え字がオーバーしている時は無効
 			return false;
 		}
-		void* ptr1 = static_cast<char*>(data_) + index1 * classData_.size_;
-		void* ptr2 = static_cast<char*>(data_) + index2 * classData_.size_;
-		void* swapBuff = malloc(classData_.size_);
-		memcpy(swapBuff, ptr1, classData_.size_);
+		void* ptr1 = (*this)[index1];
+		void* ptr2 = (*this)[index2];
+
+		void* swapBuff = malloc(classData_.size_); // 一時保存用のバッファ
+		memcpy(swapBuff, ptr1, classData_.size_);  // 入れ替え
 		memcpy(ptr1, ptr2, classData_.size_);
 		memcpy(ptr2, swapBuff, classData_.size_);
 		free(swapBuff);
 		return true;
 	}
 
-	/// @brief �v�f�̍폜
-	/// @param index �폜����Y����
-	/// @return �폜�̐���
+	/// @brief 要素の削除
+	/// @param index 削除する添え字
+	/// @return 削除の成否
 	bool erase(uint32_t index) {
-		if (empty() || index >= nowSize_) { // �ۑ��ʂ�0 or �Y�������I�[�o�[���Ă��鎞�͖���
+		if (empty() || index >= nowSize_) { // 保存量が0 or 添え字がオーバーしている時は無効
 			return false;
 		}
-		void* ptr = static_cast<char*>(data_) + index * classData_.size_;
-		classData_.destructor_(ptr);
+		void* ptr = (*this)[index];
 		memmove(
 		    ptr, static_cast<char*>(ptr) + classData_.size_,
 		    (nowSize_ - index - 1) * classData_.size_);
 		nowSize_--;
 		return true;
 	}
-	
-	/// @brief �v�f�̓���폜
-	/// @param index �폜����Y����
-	/// @return �폜�̐���
+
+	/// @brief 要素の特殊削除
+	/// @param index 削除する添え字
+	/// @return 削除の成否
 	bool swapErase(uint32_t index) {
-		if (empty() || index >= nowSize_) {
+		if (empty() || index >= nowSize_) { // 保存量が0 or 添え字がオーバーしている時は無効
 			return false;
 		}
 
-		void* ptr = static_cast<char*>(data_) + index * classData_.size_;
-		classData_.destructor_(ptr);
+		void* ptr = (*this)[index];
 
-		void* lastPtr = static_cast<char*>(data_) + (nowSize_ - 1) * classData_.size_;
+		void* lastPtr = end();
 		memcpy(ptr, lastPtr, classData_.size_);
 
 		nowSize_--;
 		return true;
 	}
 
-	void passElement(MyArray& otherArray, uint32_t index) {
+	template<typename T> const T& get(const uint32_t& index) {
 		if (empty() || index >= nowSize_) {
-			return;
+			return nullptr;
 		}
+		return GetArray<T>()[index];
+	}
 
-		void* ptr = static_cast<char*>(data_) + index * classData_.size_;
-		otherArray.push_back(*static_cast<int*>(ptr));
+	template<typename T> bool set(const uint32_t& index, const T& value) {
+		if (empty() || index >= nowSize_) {
+			return false;
+		}
+		new (&(GetArray<T>()[index])) T(value);
+		return true;
+	}
+
+	template<typename T> bool setOrPush(const uint32_t& index, const T& value) {
+		if (set(index, value))
+			return true;
+		else
+			return push_back(value);
+	}
+
+	bool passOtherArray(CustomArray& other, uint32_t index) {
+		void* ptr = (*this)[index];
+		if (!ptr)
+			return false;
+		other.push_back(ptr, classData_.size_);
 
 		swapErase(index);
+		return true;
 	}
-	
 
+	/// @brief 要素へのアクセス
+	/// @param index 添え字
+	/// @return 要素のアドレス
 	void* operator[](const uint32_t& index) {
 		if (empty() || index >= nowSize_) {
 			return nullptr;
@@ -148,8 +180,12 @@ public:
 		return static_cast<char*>(data_) + classData_.size_ * index;
 	}
 
-	
+	/// @brief 始点の要素のアドレス
+	/// @return 始点アドレス
 	void* begin() const { return data_; }
+
+	/// @brief 末端の要素のアドレス
+	/// @return 末端アドレス
 	void* end() const {
 		if (empty())
 			return data_;
@@ -159,10 +195,21 @@ public:
 	uint32_t size() const { return nowSize_; }
 
 	bool empty() const { return nowSize_ == 0; }
-
-	template<typename T> T* Get() { return static_cast<T*>(data_); }
+	/// @brief 配列へのアクセス
+	/// @tparam T 型名
+	/// @return 型変換がされたポインタ
+	template<typename T> T* GetArray() { return static_cast<T*>(data_); }
 
 private:
+	void push_back(const void* value, size_t size) {
+		if (nowSize_ == maxSize_) {
+			Resize(maxSize_ * 2);
+		}
+		void* ptr = static_cast<char*>(data_) + nowSize_ * classData_.size_;
+		memcpy(ptr, value, size);
+		nowSize_++;
+	}
+
 	uint32_t maxSize_;
 	void* data_;
 	ClassData classData_;
@@ -171,29 +218,24 @@ private:
 
 class Archetype {
 public:
-	std::unordered_map<std::type_index, ClassData> classData_;
+	std::vector<ClassData> data_;
 
 	Archetype() {}
 
-	template<typename... Ts> void AddClassData() {
-		(classData_[typeid(Ts...)] = ClassData::SetClass<Ts...>());
+	template<typename T, typename... Ts> void AddClassData() {
+		data_.push_back(ClassData::Create<T>());
+		if constexpr (sizeof...(Ts) > 0) {
+			AddClassData<Ts...>();
+		}
 	}
 
-	bool operator==(const Archetype& other) const {
-		if (classData_.size() != other.classData_.size())
-			return false;
-		for (const auto& [key, value] : classData_) {
-			if (other.classData_.count(key) == 0)
-				return false;
-		}
-		return true;
-	}
+	bool operator==(const Archetype& other) const { return other.data_ == data_; }
 
 	bool operator<=(const Archetype& other) const {
-		if (classData_.size() > other.classData_.size())
+		if (data_.size() > other.data_.size())
 			return false;
-		for (const auto& [key, value] : classData_) {
-			if (other.classData_.count(key) == 0)
+		for (const auto& element : data_) {
+			if (std::find(other.data_.begin(), other.data_.end(), element) == other.data_.end())
 				return false;
 		}
 		return true;
@@ -202,18 +244,15 @@ public:
 
 class Chunk {
 public:
-	Chunk(const Archetype& archetype, const uint32_t& maxSize = 1) { CreateArray(archetype); }
-	Chunk(const Chunk& otherChunk, const uint32_t& maxSize = 1)
+	Chunk(const Archetype& archetype, const uint32_t& maxSize = 16) { CreateArray(archetype); }
+	Chunk(const Chunk& otherChunk, const uint32_t& maxSize = 16)
 	    : archetype_(otherChunk.archetype_), maxCount_(maxSize) {
 		std::unordered_map<std::type_index, std::pair<void*, void (*)(void*, uint32_t)>>
 		    componentList_ = {};
 	}
 
-	~Chunk() {
-		for (const auto& [key, data] : componentList_) {
-			data.second(data.first, maxCount_);
-		}
-	}
+	Chunk() {}
+	~Chunk() {}
 
 	void CopyChunk(Chunk& other) {
 		other.entityCount_ = entityCount_;
@@ -221,17 +260,20 @@ public:
 		// for ()
 	}
 
-	void CreateArray(const Archetype& archetype) {
-		for (const auto& [key, classData] : archetype.classData_) {
-			componentList_[key] = {malloc(classData.size_ * maxCount_), classData.deleter_};
+	void CreateArray(const Archetype& archetype, const uint32_t& maxSize = 16) {
+		for (const auto& element : archetype.data_) {
+			componentList_[element.type_].Init(element, maxSize);
 		}
+		archetype_ = archetype;
 	}
 
-	template<typename T> T* Get() {
-		return static_cast<T*>(componentList_[std::type_index(typeid(T))]);
+	template<typename T> T* GetArray() {
+		return (componentList_[std::hash<std::string>{}(typeid(T).name())].GetArray<T>());
 	}
 
-	Entity CreateEntity();
+	template<typename T> CustomArray& GetCustomArray() {
+		return componentList_[std::hash<std::string>{}(typeid(T).name())];
+	}
 
 	void ChankDelete() {}
 
@@ -243,8 +285,7 @@ public:
 
 private:
 	Archetype archetype_;
-	std::unordered_map<std::type_index, std::pair<void*, void (*)(void*, uint32_t)>>
-	    componentList_ = {};
+	std::unordered_map<classHash, CustomArray> componentList_ = {};
 };
 
 // class CustomArray {

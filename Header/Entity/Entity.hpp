@@ -3,8 +3,8 @@
 
 class Entity {
 public:
-	uint32_t chunkId_; // 所属チャンク
-	uint32_t chunkIndex_; // チャンク内番号
+	uint32_t chunkId_; // 謇螻槭メ繝｣繝ｳ繧ｯ
+	uint32_t chunkIndex_; // 繝√Ε繝ｳ繧ｯ蜀�逡ｪ蜿ｷ
 
 	//template<typename T> T& GetComp();
 };

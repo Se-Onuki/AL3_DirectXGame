@@ -9,6 +9,9 @@
 
 #include "Header/World/World.hpp"
 
+#include "ViewProjection.h"
+#include "WorldTransform.h"
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -47,10 +50,13 @@ private: // メンバ変数
 
 	uint32_t textureHandle_ = 0;
 	Sprite* sprite_ = nullptr;
-	
-	World world = {};
+	Model* model_ = nullptr;
 
-	std::vector<Sprite*> spriteList_ = {};
+	ViewProjection viewProjection_;
+
+	WorldTransform worldTransform_;
+
+	World* world = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

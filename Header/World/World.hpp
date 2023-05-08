@@ -8,13 +8,16 @@ class EntityManager;
 
 class World {
 public:
-	World();
+	static World* GetInstance() {
+		static World instance;
+		return &instance;
+	}
 	~World();
 
 	EntityManager* GetEntityManager() { return entityManager_; }
 
-	uint32_t CreateChunk(const Archetype& archetype) { 
-		chunkList_.push_back(Chunk(archetype,16));
+	uint32_t CreateChunk(const Archetype& archetype) {
+		chunkList_.emplace_back(archetype, 16);
 		return chunkList_.size() - 1;
 	}
 	uint32_t FindMatchChunk(const Archetype& archetype) {
@@ -35,6 +38,9 @@ public:
 	template<typename A, typename B, typename C> void ForEach(std::function<void(A&, B&, C&)> func);
 
 private:
+	World();
+	World(const World&) = delete;
+	World& operator==(const World&) = delete;
 	EntityManager* entityManager_;
 };
 
@@ -44,7 +50,7 @@ template<typename A> inline void World::ForEach(std::function<void(A&)> func) {
 	for (Chunk& chunk : chunkList_) {
 		if (!(arType <= chunk.GetArchetype()))
 			continue;
-		A* dataA = chunk.Get<A>();
+		A* dataA = chunk.GetArray<A>();
 		for (uint32_t i = 0; i < chunk.entityCount_; i++) {
 			func(dataA[i]);
 		}
@@ -57,8 +63,8 @@ template<typename A, typename B> inline void World::ForEach(std::function<void(A
 	for (Chunk& chunk : chunkList_) {
 		if (!(arType <= chunk.GetArchetype()))
 			continue;
-		A* dataA = chunk.Get<A>();
-		B* dataB = chunk.Get<B>();
+		A* dataA = chunk.GetArray<A>();
+		B* dataB = chunk.GetArray<B>();
 		for (uint32_t i = 0; i < chunk.entityCount_; i++) {
 			func(dataA[i], dataB[i]);
 		}
@@ -72,9 +78,9 @@ inline void World::ForEach(std::function<void(A&, B&, C&)> func) {
 	for (Chunk& chunk : chunkList_) {
 		if (!(arType <= chunk.GetArchetype()))
 			continue;
-		A* dataA = chunk.Get<A>();
-		B* dataB = chunk.Get<B>();
-		C* dataC = chunk.Get<C>();
+		A* dataA = chunk.GetArray<A>();
+		B* dataB = chunk.GetArray<B>();
+		C* dataC = chunk.GetArray<C>();
 		for (uint32_t i = 0; i < chunk.entityCount_; i++) {
 			func(dataA[i], dataB[i], dataC[i]);
 		}

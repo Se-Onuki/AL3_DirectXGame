@@ -1,8 +1,8 @@
 #pragma once
-#include "Vector3.h"
 #include "Model.h"
-#include "WorldTransform.h"
 #include "Sprite.h"
+#include "Vector3.h"
+#include "WorldTransform.h"
 
 #include "Vector2.h"
 #include <memory>
@@ -10,100 +10,64 @@
 #include <string>
 #include <unordered_map>
 
+#include "Header/ModelManager/ModelManager.hpp"
 
-class ModelManager {
-public:
-	static ModelManager& getInstance() {
-		static ModelManager instance;
-		return instance;
-	}
+// class SpriteManager {
+// public:
+//	static SpriteManager& getInstance() {
+//		static SpriteManager instance;
+//		return instance;
+//	}
+//
+//	~SpriteManager() {
+//		for (auto& pair : sprites) {
+//			delete pair.second;
+//		}
+//	}
+//
+//	Sprite* getSprite(const std::string& key) {
+//		auto it = sprites.find(key);
+//		if (it != sprites.end()) {
+//			return it->second;
+//		}
+//		return nullptr;
+//	}
+//
+//	void addSprite(const std::string& key, Sprite* sprite) { sprites[key] = sprite; }
+//
+// private:
+//	SpriteManager() {}
+//	std::unordered_map<std::string, Sprite*> sprites;
+// };
 
-	~ModelManager() {
-		for (auto& pair : models_) {
-			delete pair.second;
-		}
-	}
+struct ComponentData {};
 
-	Model* getModel(const std::string& key) {
-		auto it = models_.find(key);
-		if (it != models_.end()) {
-			return it->second;
-		}
-		return nullptr;
-	}
-
-	void addModel(const std::string& key, Model* model) { models_[key] = model; }
-
-private:
-	ModelManager() {}
-	std::unordered_map<std::string, Model*> models_;
-};
-
-class SpriteManager {
-public:
-	static SpriteManager& getInstance() {
-		static SpriteManager instance;
-		return instance;
-	}
-
-	~SpriteManager() {
-		for (auto& pair : sprites) {
-			delete pair.second;
-		}
-	}
-
-	Sprite* getSprite(const std::string& key) {
-		auto it = sprites.find(key);
-		if (it != sprites.end()) {
-			return it->second;
-		}
-		return nullptr;
-	}
-
-	void addSprite(const std::string& key, Sprite* sprite) { sprites[key] = sprite; }
-
-private:
-	SpriteManager() {}
-	std::unordered_map<std::string, Sprite*> sprites;
-};
-
-class ComponentData {};
-
-class TransformComp : ComponentData {
-public:
+struct TransformComp : ComponentData {
 	WorldTransform wTransform_;
 };
 
-class ModelComp : ComponentData {
-public:
-	ModelComp(Model* model) : model_(model) {}
-	Model* model_;
+struct ModelComp : ComponentData {
+	void Init(const std::string& key, Model* value) {
+		model_ = std::hash<std::string>{}(key);
+		ModelManager::GetInstance()->AddModel(model_, value);
+	}
+	modelHash model_;
 };
 
-class SpriteComp : ComponentData {
-public:
+struct SpriteComp : ComponentData {
 	SpriteComp() {}
-	SpriteComp(Sprite* spritePtr) : sprite_(spritePtr) {}
-	~SpriteComp() { 
-	}
-	SpriteComp(SpriteComp &sec) {
-		this->sprite_ = std::move(sec.sprite_);
-	}
-	std::unique_ptr<Sprite> sprite_ = nullptr;
+	SpriteComp(const std::string& key, Sprite* value) : sprite_(std::hash<std::string>{}(key)) {}
+	spriteHash sprite_;
 };
 
-class TextureComp : ComponentData {
-public:
-	TextureComp(uint32_t texHandle) : texture_(texHandle) {}
+struct TextureComp : ComponentData {
 	uint32_t texture_;
 };
 
-class PositionComp : ComponentData {
-public:
-	Vector2 poistion_;
+struct PositionComp : ComponentData {
+	Vector3 poistion_;
 };
 
-class VelocityComp : ComponentData {
-public:
-	Vector2 velocity_;
+struct VelocityComp : ComponentData {
+	Vector3 velocity_;
 };

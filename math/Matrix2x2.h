@@ -1,8 +1,7 @@
 #pragma once
 
 
-class Matrix2x2 {
-public:
+struct Matrix2x2 {
 	Matrix2x2();
 	Matrix2x2(float A);
 	Matrix2x2(float A, float B, float C, float D);

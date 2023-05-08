@@ -1,9 +1,8 @@
 #pragma once
 
-class Vector3;
+struct Vector3;
 
-class Matrix4x4 {
-public:
+struct Matrix4x4 {
 	inline Matrix4x4()
 	    : m{
 	          {0, 0, 0, 0},

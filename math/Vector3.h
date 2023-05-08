@@ -3,10 +3,9 @@
 
 #include <cmath>
 
-class Matrix4x4;
+struct Matrix4x4;
 
-class Vector3 {
-public:
+struct Vector3 {
 	Vector3(float x = 0.f, float y = 0.f, float z = 0.f) : x(x), y(y), z(z) {}
 
 	float x;

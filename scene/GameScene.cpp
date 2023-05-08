@@ -3,6 +3,7 @@
 #include <cassert>
 #include <imgui.h>
 
+#include <cassert>
 #include <random>
 
 #include "Math.hpp"
@@ -11,20 +12,38 @@
 #include "Header/Entity/EntityManager.hpp"
 #include "Header/World/World.hpp"
 
-GameScene::GameScene() {}
+#include "Header/ModelManager/ModelManager.hpp"
 
-GameScene::~GameScene() {
-	for (auto& element : spriteList_) {
-		if (element)
-			delete element;
-	}
-}
+GameScene::GameScene() { world = World::GetInstance(); }
+
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	textureHandle_ = TextureManager::Load("Player/Ball.png");
+	textureHandle_ = TextureManager::Load("uvChecker.png");
+
+	viewProjection_.Initialize();
+	worldTransform_.Initialize();
+
+	EntityManager* eManager = world->GetEntityManager();
+
+	Entity entity = eManager->CreateEntity<TransformComp, ModelComp, TextureComp>();
+	TransformComp transform;
+	transform.wTransform_.Initialize();
+	eManager->SetComponent(entity, transform);
+
+	model_ = Model::Create();
+	ModelComp model;
+	model.Init("player", model_);
+	eManager->SetComponent(entity, model);
+	Model* a =
+	    ModelManager::GetInstance()->GetModel(eManager->GetComponent<ModelComp>(entity).model_);
+
+	TextureComp texture;
+	texture.texture_ = textureHandle_;
+	eManager->SetComponent(entity, texture);
 }
 
 void GameScene::Update() {
@@ -34,19 +53,11 @@ void GameScene::Update() {
 
 	/*static uint32_t time = 0;
 	if (time++ < 600) {
-		EntityManager* eManager = world.GetEntityManager();
 
-		Entity entity = eManager->CreateEntity<VelocityComp, SpriteComp>();
-		VelocityComp velo;
-		velo.velocity_ = {dist(gen), dist(gen)};
-		SpriteComp sprite(Sprite::Create(textureHandle_, {0, 0}));
-		eManager->SetComponent(entity, velo);
-		eManager->SetComponent(entity, sprite);
 	}*/
 
+	world->ForEach<ModelComp, VelocityComp>([](ModelComp& model, VelocityComp& velo) {
 
-	world.ForEach<SpriteComp, VelocityComp>([](SpriteComp& sprite, VelocityComp& velo) {
-		sprite.sprite_->SetPosition(sprite.sprite_->GetPosition() + velo.velocity_);
 	});
 }
 
@@ -76,6 +87,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	world->ForEach<ModelComp, TextureComp, TransformComp>(
+	    [*this](ModelComp& model, TextureComp& texture, TransformComp& transform) {
+		    ModelManager::GetInstance()
+		        ->GetModel(model.model_)
+		        ->Draw(transform.wTransform_, viewProjection_, texture.texture_);
+	    });
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -88,7 +105,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	world.ForEach<SpriteComp>([](SpriteComp& sprite) { sprite.sprite_->Draw(); });
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
