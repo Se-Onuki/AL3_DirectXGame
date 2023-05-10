@@ -6,8 +6,8 @@
 #include <cassert>
 #include <random>
 
-#include "Math.hpp"
 #include "AxisIndicator.h"
+#include "Math.hpp"
 
 #include "Header/Component/Component.hpp"
 #include "Header/Entity/EntityManager.hpp"
@@ -34,17 +34,16 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
-
 	world_ = World::GetInstance();
 
 	EntityManager* eManager = world_->GetEntityManager();
 
 #pragma region Entity
 
-	Entity entity =
-	    eManager->CreateEntity<Identifier, TransformComp, ModelComp, TextureComp, VelocityComp>();
+	const Entity entity = eManager->CreateEntity<
+	    Identifier, TransformComp, ModelComp, TextureComp, VelocityComp, AccelerationComp>();
 	Identifier identifier;
-	identifier.Init("player");
+	identifier.Init('p');
 	eManager->SetComponent(entity, identifier);
 
 	TransformComp transform;
@@ -54,8 +53,6 @@ void GameScene::Initialize() {
 	ModelComp model;
 	model.Init("player", Model::Create());
 	eManager->SetComponent(entity, model);
-	Model* a =
-	    ModelManager::GetInstance()->GetModel(eManager->GetComponent<ModelComp>(entity).model_);
 
 	TextureComp texture;
 	texture.texture_ = textureHandle_;
@@ -65,8 +62,11 @@ void GameScene::Initialize() {
 	velocity.velocity_ = Vector3::zero();
 	eManager->SetComponent(entity, velocity);
 
-#pragma endregion
+	AccelerationComp acceleration;
+	acceleration.acceleration_ = Vector3::zero();
+	eManager->SetComponent(entity, acceleration);
 
+#pragma endregion
 }
 
 void GameScene::Update() {
@@ -78,6 +78,7 @@ void GameScene::Update() {
 	}
 
 #endif // _DEBUG
+
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
 		auto& vp = debugCamera_->GetViewProjection();
@@ -88,25 +89,68 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-	world_->ForEach<VelocityComp>(
-	    [](VelocityComp& velocity) { velocity.velocity_ = Vector3::zero(); });
+	world_->ForEach<VelocityComp, AccelerationComp>(
+	    [](VelocityComp& velocity, AccelerationComp& acceleration) {
+		    velocity.velocity_ += acceleration.acceleration_;
+		    acceleration.acceleration_ = Vector3::zero();
+	    });
 
-	world_->ForEach<Identifier, VelocityComp>(
-	    [this](Identifier& identifier, VelocityComp& velocity) {
+	world_->ForEach<Identifier, AccelerationComp, TransformComp>(
+	    [this](Identifier& identifier, AccelerationComp& acceleration, TransformComp& transform) {
+		    if (!identifier.name_ || identifier.name_ != 'p')
+			    return;
 		    const float moveSpeed = 0.4f;
+		    Vector3 addSpeed = {};
 		    if (input_->PushKey(DIK_A)) {
-			    velocity.velocity_.x -= 1;
+			    addSpeed.x -= 1;
 		    } else if (input_->PushKey(DIK_D)) {
-			    velocity.velocity_.x += 1;
+			    addSpeed.x += 1;
 		    }
 
 		    if (input_->PushKey(DIK_W)) {
-			    velocity.velocity_.y += 1;
+			    addSpeed.y += 1;
 		    } else if (input_->PushKey(DIK_S)) {
-			    velocity.velocity_.y -= 1;
+			    addSpeed.y -= 1;
 		    }
 
-		    velocity.velocity_ = velocity.velocity_.Nomalize() * moveSpeed;
+		    acceleration.acceleration_ = addSpeed.Nomalize() * moveSpeed;
+
+		    if (input_->TriggerKey(DIK_SPACE)) {
+
+#pragma region BulletSpawn
+
+			    EntityManager* eManager = world_->GetEntityManager();
+
+			    Entity bullet = eManager->CreateEntity<
+			        Identifier, TransformComp, ModelComp, TextureComp, VelocityComp, AccelerationComp>();
+
+			    Identifier bIdentifier;
+			    bIdentifier.Init('b');
+			    eManager->SetComponent(bullet, bIdentifier);
+
+			    TransformComp bTransform;
+			    bTransform.wTransform_.Initialize();
+			    bTransform.wTransform_.translation_ = transform.wTransform_.translation_;
+			    eManager->SetComponent(bullet, bTransform);
+
+			    ModelComp bModel;
+			    bModel.Init("player");
+			    eManager->SetComponent(bullet, bModel);
+
+			    TextureComp bTexture;
+			    bTexture.texture_ = textureHandle_;
+			    eManager->SetComponent(bullet, bTexture);
+
+			    VelocityComp bVelocity;
+			    bVelocity.velocity_ = Vector3::zero();
+			    eManager->SetComponent(bullet, bVelocity);
+
+				AccelerationComp acceleration;
+			    acceleration.acceleration_ = Vector3::zero();
+			    eManager->SetComponent(bullet, acceleration);
+
+#pragma endregion
+		    }
 	    });
 
 	world_->ForEach<TransformComp, VelocityComp>(
@@ -115,6 +159,7 @@ void GameScene::Update() {
 		    Vector3& rotation = transform.wTransform_.rotation_;
 		    Vector3& translation = transform.wTransform_.translation_;
 		    translation += velocity.velocity_;
+		    velocity.velocity_ *= 0.8f;
 
 		    const Vector3 Stopper{34, 18, 0};
 
@@ -128,6 +173,8 @@ void GameScene::Update() {
 
 	world_->ForEach<TransformComp, Identifier>(
 	    [](TransformComp& transform, Identifier& identifier) {
+		    if (identifier.name_ != 'p')
+			    return;
 		    Vector3& position = transform.wTransform_.translation_;
 		    // float posBuff[3] =
 		    ImGui::Begin("player");

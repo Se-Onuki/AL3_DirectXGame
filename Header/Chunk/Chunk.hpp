@@ -149,7 +149,8 @@ public:
 		if (empty() || index >= nowSize_) {
 			return false;
 		}
-		new (&(GetArray<T>()[index])) T(value);
+		GetArray<T>()[index] = value;
+		// new (&(GetArray<T>()[index])) T(value);
 		return true;
 	}
 
@@ -245,10 +246,10 @@ public:
 class Chunk {
 public:
 	Chunk(const Archetype& archetype, const uint32_t& maxSize = 16) { CreateArray(archetype); }
-	Chunk(const Chunk& otherChunk, const uint32_t& maxSize = 16)
+	Chunk(const Chunk& otherChunk, const uint32_t& maxSize)
 	    : archetype_(otherChunk.archetype_), maxCount_(maxSize) {
-		std::unordered_map<std::type_index, std::pair<void*, void (*)(void*, uint32_t)>>
-		    componentList_ = {};
+		std::unordered_map<classHash, CustomArray>
+		    componentList_ ;
 	}
 
 	Chunk() {}
