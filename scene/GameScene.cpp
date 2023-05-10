@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	textureHandle_ = TextureManager::Load("uvChecker.png");
+	bulletTextureHandle_ = TextureManager::Load("white1x1.png");
 
 	viewProjection_.Initialize();
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -85,7 +86,8 @@ void GameScene::Update() {
 		viewProjection_.matView = vp.matView;
 		viewProjection_.matProjection = vp.matProjection;
 		viewProjection_.TransferMatrix();
-	} else {
+	}
+	else {
 		viewProjection_.UpdateMatrix();
 	}
 
@@ -138,7 +140,7 @@ void GameScene::Update() {
 			    eManager->SetComponent(bullet, bModel);
 
 			    TextureComp bTexture;
-			    bTexture.texture_ = textureHandle_;
+			    bTexture.texture_ = bulletTextureHandle_;
 			    eManager->SetComponent(bullet, bTexture);
 
 			    VelocityComp bVelocity;
