@@ -1,16 +1,16 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
+#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
 #include <imgui.h>
-#include "PrimitiveDrawer.h"
-#include "AxisIndicator.h"
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete sprite_;
-	delete model_;
+
 	delete debugCamera_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -19,15 +19,12 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("uvChecker.png");
-	sprite_ = Sprite::Create(textureHandle_, Vector2{100, 100});
-	model_ = Model::Create();
+	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
 
-	worldTransform_.Initialize();
+	player_ = new Player();
+	player_->Init("playerModel", TextureManager::Load("uvChecker.png"));
+
 	viewProjection_.Initialize();
-
-	soundDataHandle_ = audio_->LoadWave("mokugyo.wav");
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 	debugCamera_ = new DebugCamera(1280, 720);
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -35,21 +32,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	Vector2 position = sprite_->GetPosition();
-	position.x += 0.2f;
-	position.y += 0.1f;
 
-	sprite_->SetPosition(position);
-	if (input_->TriggerKey(DIK_SPACE)) {
-		audio_->StopWave(voiceHandle_);
-	}
-	ImGui::Begin("Debug1");
-	ImGui::Text("Kamata Tarou %d, %d, %d", 2050, 12, 31);
-	ImGui::InputFloat3("InputFloat", inputFloat3);
-	ImGui::SliderFloat3("SliderFloat", inputFloat3, 0.0f, 1.0f);
-	ImGui::End();
-
-	ImGui::ShowDemoWindow();
 	debugCamera_->Update();
 }
 
@@ -65,7 +48,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -80,9 +62,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
-	PrimitiveDrawer::GetInstance()->DrawLine3d(
-	    Vector3{10, 0, 10}, Vector3{-10, 0, -10}, Vector4{1, 0, 1, 1});
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
