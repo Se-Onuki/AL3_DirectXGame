@@ -54,9 +54,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="base\DirectXCommon.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
@@ -69,26 +66,29 @@
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\math</Filter>
+    </ClCompile>
     <ClCompile Include="math\Math.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Matrix2x2.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Matrix3x3.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Matrix4x4.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Polar.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Vector2.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
     <ClCompile Include="math\Vector3.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
