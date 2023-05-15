@@ -5,8 +5,8 @@
 #include "Model.h"
 #include "Sprite.h"
 
-using modelHash = size_t;
-using spriteHash = size_t;
+using ModelHash = size_t;
+using SpriteHash = size_t;
 
 class ModelManager {
 public:
@@ -20,36 +20,36 @@ public:
 	/// @param key 文字列キー
 	/// @param model モデルデータ
 	void AddModel(const std::string& key, Model* model) {
-		modelHash hash = std::hash<std::string>{}(key);
+		ModelHash hash = std::hash<std::string>{}(key);
 		models_[hash] = model;
 	}
 	/// @brief モデルの追加
 	/// @param hash 文字列ハッシュ値
 	/// @param model モデルデータ
-	void AddModel(const modelHash& hash, Model* model) { models_[hash] = model; }
+	void AddModel(const ModelHash& hash, Model* model) { models_[hash] = model; }
 
 	/// @brief モデルデータの取得
 	/// @param key 文字列キー
 	/// @return モデルデータ
 	Model* GetModel(const std::string& key) {
-		modelHash hash = std::hash<std::string>{}(key);
+		ModelHash hash = std::hash<std::string>{}(key);
 		return models_[hash];
 	}
 	/// @brief モデルデータの取得
 	/// @param hash 文字列ハッシュ値
 	/// @return モデルデータ
-	Model* GetModel(const modelHash& hash) { return models_[hash]; }
+	Model* GetModel(const ModelHash& hash) { return models_[hash]; }
 
 	/// @brief モデルデータの破棄
 	/// @param key 文字列キー
 	void removeModel(const std::string& key) {
-		modelHash hash = std::hash<std::string>{}(key);
+		ModelHash hash = std::hash<std::string>{}(key);
 		RemoveModel(hash);
 	}
 
 	/// @brief モデル破棄
 	/// @param hash 文字列ハッシュ値
-	void RemoveModel(const modelHash& hash) {
+	void RemoveModel(const ModelHash& hash) {
 		delete models_[hash];
 		models_.erase(hash);
 	}
@@ -69,7 +69,7 @@ private:
 	ModelManager& operator=(const ModelManager&) = delete;
 
 	// モデルマップ
-	std::unordered_map<modelHash, Model*> models_;
+	std::unordered_map<ModelHash, Model*> models_;
 };
 
 class SpriteManager {
@@ -84,36 +84,36 @@ public:
 	/// @param key 文字列キー
 	/// @param sprite スプライトデータ
 	void AddSprite(const std::string& key, Sprite* sprite) {
-		spriteHash hash = std::hash<std::string>{}(key);
+		SpriteHash hash = std::hash<std::string>{}(key);
 		sprites_[hash] = sprite;
 	}
 	/// @brief スプライトの追加
 	/// @param hash 文字列ハッシュ値
 	/// @param sprite スプライトデータ
-	void AddSprite(const spriteHash& hash, Sprite* sprite) { sprites_[hash] = sprite; }
+	void AddSprite(const SpriteHash& hash, Sprite* sprite) { sprites_[hash] = sprite; }
 
 	/// @brief スプライトデータの取得
 	/// @param key 文字列キー
 	/// @return スプライトデータ
 	Sprite* GetSprite(const std::string& key) {
-		spriteHash hash = std::hash<std::string>{}(key);
+		SpriteHash hash = std::hash<std::string>{}(key);
 		return sprites_[hash];
 	}
 	/// @brief スプライトデータの取得
 	/// @param hash 文字列ハッシュ値
 	/// @return スプライトデータ
-	Sprite* GetSprite(const spriteHash& hash) { return sprites_[hash]; }
+	Sprite* GetSprite(const SpriteHash& hash) { return sprites_[hash]; }
 
 	/// @brief スプライトデータの破棄
 	/// @param key 文字列キー
 	void removeSprite(const std::string& key) {
-		spriteHash hash = std::hash<std::string>{}(key);
+		SpriteHash hash = std::hash<std::string>{}(key);
 		RemoveSprite(hash);
 	}
 
 	/// @brief スプライト破棄
 	/// @param hash 文字列ハッシュ値
-	void RemoveSprite(const spriteHash& hash) {
+	void RemoveSprite(const SpriteHash& hash) {
 		delete sprites_[hash];
 		sprites_.erase(hash);
 	}
@@ -131,6 +131,6 @@ private:
 	SpriteManager(const SpriteManager&) = delete;
 	SpriteManager& operator=(const SpriteManager&) = delete;
 	// スプライトマップ
-	std::unordered_map<spriteHash, Sprite*> sprites_;
+	std::unordered_map<SpriteHash, Sprite*> sprites_;
 };
 

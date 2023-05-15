@@ -21,6 +21,12 @@ Vector2 operator <<(Vector2 &vec2, const Polar &Polar);
 /// <returns>極座標クラス</returns>
 Polar operator <<(Polar &Polar, const Vector2 &vec2);
 
+/// @brief ベクトルの向きのみの回転
+/// @param v 元ベクトル
+/// @param m ワールド行列
+/// @return 回転したベクトル
+_NODISCARD Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
 
 /// <summary>
 /// 回転行列作成関数

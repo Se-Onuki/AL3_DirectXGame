@@ -51,7 +51,7 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 
-
+	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
 	Player* player_ = nullptr;

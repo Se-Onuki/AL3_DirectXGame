@@ -1,10 +1,121 @@
 #include "Player.h"
 #include "Header/ModelManager/ModelManager.h"
+#include <algorithm>
+#include <imgui.h>
+
+#include "PlayerBullet.h"
+#include "math/Math.hpp"
 
 void Player::Init(const std::string& modelKey, const uint32_t& textureHandle) {
-	worldTransform_.Initialize();
-	model_ = std::hash<std::string>{}(modelKey);
-	textureHandle_ = textureHandle;
+	Entity::Init(modelKey, textureHandle);
+	input_ = Input::GetInstance();
 }
 
-void Player::Update() { worldTransform_.TransferMatrix(); }
+void Player::Update() {
+
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+#pragma region 旋回処理
+
+	Vector3 rotateDirection = {};
+
+	if (input_->PushKey(DIK_E)) {
+		rotateDirection.y += kRotSpeed;
+	}
+	if (input_->PushKey(DIK_Q)) {
+		rotateDirection.y -= kRotSpeed;
+	}
+
+#pragma endregion
+
+#pragma region 移動処理
+
+	Vector3 moveDirection = {};
+
+#pragma region 入力方向取得
+
+	if (input_->PushKey(DIK_A)) {
+		moveDirection.x -= 1;
+	}
+	if (input_->PushKey(DIK_D)) {
+		moveDirection.x += 1;
+	}
+
+	if (input_->PushKey(DIK_W)) {
+		moveDirection.y += 1;
+	}
+	if (input_->PushKey(DIK_S)) {
+		moveDirection.y -= 1;
+	}
+
+#pragma endregion
+
+	moveDirection = moveDirection.Nomalize() * MoveSpeed;
+
+#pragma endregion
+
+	// Vector3& scale = worldTransform_.scale_;
+	Vector3& rotate = worldTransform_.rotation_;
+	Vector3& translate = worldTransform_.translation_;
+
+	rotate += rotateDirection;
+
+	translate += moveDirection;
+	translate.x = std::clamp(translate.x, -MovementLimit.x, MovementLimit.x);
+	translate.y = std::clamp(translate.y, -MovementLimit.y, MovementLimit.y);
+
+	worldTransform_.UpdateMatrix();
+
+	ImGui::Begin("playerPosition");
+	ImGui::Text("x: %.2f, y: %.2f, z: %.2f", translate.x, translate.y, translate.z);
+	ImGui::End();
+
+#pragma region 攻撃処理
+
+	Attack();
+
+#pragma endregion
+
+	for (auto& element : bullets_) {
+		element->Update();
+	}
+}
+
+void Player::Attack() {
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		Vector3 velocity(0, 0, kBulletSpeed);
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Init(model_, worldTransform_.translation_, velocity);
+
+		bullets_.push_back(newBullet);
+	}
+}
+
+void Player::Draw(const ViewProjection& Vp) {
+	Entity::Draw(Vp);
+	for (auto& element : bullets_) {
+		element->Draw(Vp);
+	}
+}
+
+Player::Player() {}
+
+Player::~Player() {
+	for (auto& element : bullets_) {
+		if (element) {
+
+			delete element;
+			element = nullptr;
+		}
+	}
+	bullets_.clear();
+}

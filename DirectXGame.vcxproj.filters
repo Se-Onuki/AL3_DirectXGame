@@ -105,6 +105,12 @@
     <ClCompile Include="Header\Entity\Player.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Header\Entity\PlayerBullet.cpp">
+      <Filter>Header\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="3d\WorldTransform.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -210,6 +216,9 @@
       <Filter>Header\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Header\Entity\Player.h">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Entity\PlayerBullet.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
   </ItemGroup>

@@ -107,10 +107,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2d\ImGuiManager.cpp" />
+    <ClCompile Include="3d\WorldTransform.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
+    <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Math.cpp" />
     <ClCompile Include="math\Matrix2x2.cpp" />
@@ -146,6 +148,7 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\Player.h" />
+    <ClInclude Include="Header\Entity\PlayerBullet.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Math.hpp" />
