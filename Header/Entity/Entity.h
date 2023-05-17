@@ -22,5 +22,8 @@ public:
 
 	virtual void Update() {}
 
-	void Move() { worldTransform_.translation_ += velocity_; }
+	void Move() {
+		worldTransform_.translation_ += velocity_;
+		worldTransform_.UpdateMatrix();
+	}
 };

@@ -11,6 +11,7 @@
 
 #include "DebugCamera.h"
 #include "Header/Entity/Player.h"
+#include "Header/Entity/Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -55,6 +56,7 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 
 	Player* player_ = nullptr;
+	std::list<std::unique_ptr<Enemy>> enemyList_;
 
 	/// <summary>
 	/// ゲームシーン用

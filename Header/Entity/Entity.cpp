@@ -1,10 +1,8 @@
 #include "Entity.h"
 
 void Entity::Init(const std::string& modelKey, const uint32_t& textureHandle) {
-	worldTransform_.Initialize();
 	ModelHash modelHash = std::hash<std::string>{}(modelKey);
-	model_ = ModelManager::GetInstance()->GetModel(modelHash);
-	textureHandle_ = textureHandle;
+	this->Init(ModelManager::GetInstance()->GetModel(modelHash), textureHandle);
 }
 
 void Entity::Init(Model* model, const uint32_t& textureHandle) {

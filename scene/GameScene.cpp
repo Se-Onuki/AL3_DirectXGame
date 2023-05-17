@@ -24,6 +24,12 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	player_->Init("playerModel", TextureManager::Load("uvChecker.png"));
 
+	Enemy* enemy = new Enemy();
+	enemy->Init(
+	    "playerModel", TextureManager::Load("white1x1.png"), {1.f, 3.f, 30.f});
+
+	enemyList_.emplace_back(enemy);
+
 	viewProjection_.Initialize();
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -33,6 +39,9 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	player_->Update();
+	for (auto& enemy : enemyList_) {
+		enemy->Update();
+	}
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_0)) {
@@ -77,6 +86,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewProjection_);
+	for (auto& enemy : enemyList_) {
+		enemy->Draw(viewProjection_);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
