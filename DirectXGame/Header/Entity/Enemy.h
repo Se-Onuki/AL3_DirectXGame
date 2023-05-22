@@ -4,12 +4,26 @@
 namespace EnemyState {
 class Base;
 }
+class EnemyBullet;
 
 class Enemy : public Entity {
 
 	EnemyState::Base* state_;
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	const float kBulletSpeed = 0.5f;
+
+	uint16_t cooltime_;
+	const uint16_t maxCooltime_ = 50;
 
 public:
+	void ResetCooltime() { cooltime_ = maxCooltime_; };
+	void FireTimer() {
+		if (--cooltime_ <= 0) {
+			Fire();
+			ResetCooltime();
+		}
+	}
+	void Fire();
 	void ChangeState(EnemyState::Base* newState);
 	const static float DefaultSpeed;
 	Enemy();
@@ -17,6 +31,7 @@ public:
 
 	void Init(Model* model, const uint32_t& textureHandle, const Vector3& position);
 	void Update() override;
+	void Draw(const ViewProjection& Vp) override;
 };
 
 namespace EnemyState {
@@ -44,3 +59,19 @@ public:
 };
 
 } // namespace EnemyState
+
+class EnemyBullet : public Entity {
+
+	static const int32_t kLifeTime = 60 * 5;
+	int32_t deathTimer_ = kLifeTime;
+	bool isDead_ = false;
+
+public:
+	EnemyBullet() {}
+	virtual ~EnemyBullet() {}
+
+	void Init(Model* model, const Vector3& position, const Vector3& velocity);
+	void Update() override;
+
+	const bool& IsDead() const { return isDead_; }
+};
