@@ -1,23 +1,16 @@
 #pragma once
 #include "Entity.h"
 
-enum class Phase {
-	Approach, // 接近
-	Leave,    // 離脱
-};
-
-class BaseEnemyState;
+namespace EnemyState {
+class Base;
+}
 
 class Enemy : public Entity {
 
-	BaseEnemyState* state_;
-
-	void ApproachState();
-	void LeaveState();
-
+	EnemyState::Base* state_;
 
 public:
-	void ChangeState(BaseEnemyState* newState);
+	void ChangeState(EnemyState::Base* newState);
 	const static float DefaultSpeed;
 	Enemy();
 	~Enemy();
@@ -26,19 +19,28 @@ public:
 	void Update() override;
 };
 
-class BaseEnemyState {
+namespace EnemyState {
+class Base {
 public:
-	virtual ~BaseEnemyState(){};
+	virtual ~Base(){};
 	Enemy* enemy_ = nullptr;
+	virtual void Enter() = 0;
 	virtual void Update() = 0;
+	virtual void Exit() = 0;
 };
 
-class EnemyStateApproach : public BaseEnemyState {
+class Approach : public EnemyState::Base {
 public:
+	void Enter() override;
 	void Update() override;
+	void Exit() override;
 };
 
-class EnemyStateLeave : public BaseEnemyState {
+class Leave : public EnemyState::Base {
 public:
+	void Enter() override;
 	void Update() override;
+	void Exit() override;
 };
+
+} // namespace EnemyState

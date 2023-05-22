@@ -3,13 +3,13 @@
 
 const float Enemy::DefaultSpeed = 0.2f;
 
-void Enemy::ChangeState(BaseEnemyState* newState) {
+void Enemy::ChangeState(EnemyState::Base* newState) {
 	delete state_;
 	state_ = newState;
 	state_->enemy_ = this;
 }
 
-Enemy::Enemy() { ChangeState(new EnemyStateApproach()); }
+Enemy::Enemy() { ChangeState(new EnemyState::Approach()); }
 
 Enemy::~Enemy() {}
 
@@ -20,7 +20,6 @@ void Enemy::Init(
 }
 
 void Enemy::Update() {
-
 	state_->Update();
 
 	worldTransform_.UpdateMatrix();
@@ -30,21 +29,27 @@ void Enemy::Update() {
 	ImGui::End();
 }
 
-void Enemy::ApproachState() {}
+void EnemyState::Approach::Enter() {}
 
-void Enemy::LeaveState() {}
-
-void EnemyStateApproach::Update() {
+void EnemyState::Approach::Update() {
 	// 移動
 	enemy_->AddPosition(Vector3{0.f, 0.f, -1.f}.Nomalize() * enemy_->DefaultSpeed);
 	if (enemy_->GetWorldTransform().translation_.z <= 0.f) {
-		enemy_->ChangeState(new EnemyStateLeave());
+		enemy_->ChangeState(new EnemyState::Leave());
 	}
 }
 
-void EnemyStateLeave::Update() {
+void EnemyState::Approach::Exit() {}
+
+
+
+void EnemyState::Leave::Enter() {}
+
+void EnemyState::Leave::Update() {
 	// 移動
 	enemy_->AddPosition(
 	    (enemy_->GetWorldTransform().translation_ - Vector3::zero()).Nomalize() *
 	    enemy_->DefaultSpeed);
 }
+
+void EnemyState::Leave::Exit() {}
