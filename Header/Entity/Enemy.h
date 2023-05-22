@@ -6,20 +6,39 @@ enum class Phase {
 	Leave,    // 離脱
 };
 
+class BaseEnemyState;
+
 class Enemy : public Entity {
-	// フェーズ
-	Phase phase_ = Phase::Approach;
-	const static float DefaultSpeed;
+
+	BaseEnemyState* state_;
 
 	void ApproachState();
 	void LeaveState();
 
-	static void (Enemy::*StateTable[])();
 
 public:
+	void ChangeState(BaseEnemyState* newState);
+	const static float DefaultSpeed;
 	Enemy();
 	~Enemy();
 
 	void Init(const std::string& modelKey, const uint32_t& textureHandle, const Vector3& position);
+	void Update() override;
+};
+
+class BaseEnemyState {
+public:
+	virtual ~BaseEnemyState(){};
+	Enemy* enemy_ = nullptr;
+	virtual void Update() = 0;
+};
+
+class EnemyStateApproach : public BaseEnemyState {
+public:
+	void Update() override;
+};
+
+class EnemyStateLeave : public BaseEnemyState {
+public:
 	void Update() override;
 };

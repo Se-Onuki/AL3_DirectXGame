@@ -2,12 +2,14 @@
 #include <imgui.h>
 
 const float Enemy::DefaultSpeed = 0.2f;
-void (Enemy::*Enemy::StateTable[])() = {	// staticの関数ポインタ配列の変数に、関数のアドレスを定義する。
-	&Enemy::ApproachState,
-	&Enemy::LeaveState
-};
 
-Enemy::Enemy() {}
+void Enemy::ChangeState(BaseEnemyState* newState) {
+	delete state_;
+	state_ = newState;
+	state_->enemy_ = this;
+}
+
+Enemy::Enemy() { ChangeState(new EnemyStateApproach()); }
 
 Enemy::~Enemy() {}
 
@@ -18,9 +20,8 @@ void Enemy::Init(
 }
 
 void Enemy::Update() {
-	uint32_t stateNumber = static_cast<uint32_t>(phase_);
-	(this->*StateTable[stateNumber])();
 
+	state_->Update();
 
 	worldTransform_.UpdateMatrix();
 	const Vector3& translation = worldTransform_.translation_;
@@ -29,16 +30,21 @@ void Enemy::Update() {
 	ImGui::End();
 }
 
-void Enemy::ApproachState() {
+void Enemy::ApproachState() {}
+
+void Enemy::LeaveState() {}
+
+void EnemyStateApproach::Update() {
 	// 移動
-	worldTransform_.translation_ += Vector3{0.f, 0.f, -1.f}.Nomalize() * DefaultSpeed;
-	if (worldTransform_.translation_.z <= 0.f) {
-		phase_ = Phase::Leave;
+	enemy_->AddPosition(Vector3{0.f, 0.f, -1.f}.Nomalize() * enemy_->DefaultSpeed);
+	if (enemy_->GetWorldTransform().translation_.z <= 0.f) {
+		enemy_->ChangeState(new EnemyStateLeave());
 	}
 }
 
-void Enemy::LeaveState() {
+void EnemyStateLeave::Update() {
 	// 移動
-	worldTransform_.translation_ +=
-	    (worldTransform_.translation_ - Vector3::zero()).Nomalize() * DefaultSpeed;
+	enemy_->AddPosition(
+	    (enemy_->GetWorldTransform().translation_ - Vector3::zero()).Nomalize() *
+	    enemy_->DefaultSpeed);
 }

@@ -11,6 +11,12 @@ protected:
 	Vector3 velocity_ = {};
 
 public:
+	void AddPosition(const Vector3 &vector) {
+		worldTransform_.translation_ += vector;
+		worldTransform_.UpdateMatrix();
+	}
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
 	virtual ~Entity() {}
 
 	virtual void Draw(const ViewProjection& Vp) {
