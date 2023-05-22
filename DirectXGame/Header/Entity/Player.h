@@ -16,7 +16,7 @@ class Player : public Entity {
 	void Attack();
 
 public:
-	void Init(const std::string& modelKey, const uint32_t& textureHandle) override;
+	void Init(Model* model, const uint32_t& textureHandle) override;
 	void Update() override;
 	void Draw(const ViewProjection& Vp) override;
 

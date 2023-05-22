@@ -20,13 +20,13 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
+	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");
 
 	player_ = new Player();
-	player_->Init("playerModel", TextureManager::Load("uvChecker.png"));
+	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
 
 	Enemy* enemy = new Enemy();
-	enemy->Init(
-	    "playerModel", TextureManager::Load("white1x1.png"), {1.f, 3.f, 30.f});
+	enemy->Init(playerModel, TextureManager::Load("white1x1.png"), {1.f, 3.f, 30.f});
 
 	enemyList_.emplace_back(enemy);
 

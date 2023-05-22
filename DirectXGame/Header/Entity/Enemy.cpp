@@ -14,8 +14,8 @@ Enemy::Enemy() { ChangeState(new EnemyState::Approach()); }
 Enemy::~Enemy() {}
 
 void Enemy::Init(
-    const std::string& modelKey, const uint32_t& textureHandle, const Vector3& position) {
-	Entity::Init(modelKey, textureHandle);
+    Model* model, const uint32_t& textureHandle, const Vector3& position) {
+	Entity::Init(model, textureHandle);
 	worldTransform_.translation_ = position;
 }
 

@@ -6,8 +6,8 @@
 #include "PlayerBullet.h"
 #include "math/Math.hpp"
 
-void Player::Init(const std::string& modelKey, const uint32_t& textureHandle) {
-	Entity::Init(modelKey, textureHandle);
+void Player::Init(Model* model, const uint32_t& textureHandle) {
+	Entity::Init(model, textureHandle);
 	input_ = Input::GetInstance();
 }
 

@@ -15,7 +15,7 @@ public:
 	Enemy();
 	~Enemy();
 
-	void Init(const std::string& modelKey, const uint32_t& textureHandle, const Vector3& position);
+	void Init(Model* model, const uint32_t& textureHandle, const Vector3& position);
 	void Update() override;
 };
 

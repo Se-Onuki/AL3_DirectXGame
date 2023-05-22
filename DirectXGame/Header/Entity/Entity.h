@@ -23,7 +23,7 @@ public:
 		model_->Draw(worldTransform_, Vp, textureHandle_);
 	}
 
-	virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);
+	//virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);
 	virtual void Init(Model* model, const uint32_t& textureHandle);
 
 	virtual void Update() {}
