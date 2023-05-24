@@ -61,6 +61,9 @@
     <Filter Include="Header\ModelManager">
       <UniqueIdentifier>{d01dded0-8ca6-4947-8ae9-d1f35044b40e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Timer">
+      <UniqueIdentifier>{5480c2f4-19b7-453c-9b80-e974c625a6fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -111,8 +114,11 @@
     <ClCompile Include="3d\WorldTransform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Header\Timer\Timer.cpp">
+      <Filter>Header\Timer</Filter>
+    </ClCompile>
     <ClCompile Include="Header\Entity\Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Header\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="Header\Entity\Enemy.h">
       <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Timer\Timer.h">
+      <Filter>Header\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

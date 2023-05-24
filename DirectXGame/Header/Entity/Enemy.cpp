@@ -24,6 +24,18 @@ void Enemy::Fire() {
 	bullets_.emplace_back(newBullet);
 }
 
+void Enemy::FireAndInit() {
+	Fire();
+	SetFireTimer();
+}
+
+void Enemy::SetFireTimer() {
+	fireTimerList_.emplace_back(
+	    new FunctionTimer(std::bind(&Enemy::FireAndInit, this), this->maxCooltime_));
+}
+
+void Enemy::FireTimerDelete() { fireTimerList_.clear(); }
+
 Enemy::Enemy() { ChangeState(new EnemyState::Approach()); }
 
 Enemy::~Enemy() {}
@@ -33,7 +45,6 @@ void Enemy::Init(Model* model, const uint32_t& textureHandle, const Vector3& pos
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = Angle::Digree(180).ToRadian();
 	worldTransform_.UpdateMatrix();
-	cooltime_ = maxCooltime_;
 }
 
 void Enemy::Update() {
@@ -44,6 +55,19 @@ void Enemy::Update() {
 		}
 		return false;
 	});
+
+	fireTimerList_.remove_if([](std::unique_ptr<FunctionTimer>& fireTimer) {
+		if (fireTimer->IsFinish()) {
+			fireTimer.reset();
+			return true;
+		}
+		return false;
+	});
+
+	for (auto& fireTimer : fireTimerList_) {
+		fireTimer->Update();
+	}
+
 	state_->Update();
 	for (auto& bullet : bullets_) {
 		bullet->Update();
@@ -62,7 +86,7 @@ void Enemy::Draw(const ViewProjection& Vp) {
 	}
 }
 
-void EnemyState::Approach::Enter() { enemy_->ResetCooltime(); }
+void EnemyState::Approach::Enter() { enemy_->SetFireTimer(); }
 
 void EnemyState::Approach::Update() {
 	// 移動
@@ -71,10 +95,9 @@ void EnemyState::Approach::Update() {
 		enemy_->ChangeState(new EnemyState::Leave());
 		return;
 	}
-	enemy_->FireTimer();
 }
 
-void EnemyState::Approach::Exit() {}
+void EnemyState::Approach::Exit() { enemy_->FireTimerDelete(); }
 
 void EnemyState::Leave::Enter() {}
 

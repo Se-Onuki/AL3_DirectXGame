@@ -11,11 +11,12 @@ protected:
 	Vector3 velocity_ = {};
 
 public:
-	void AddPosition(const Vector3 &vector) {
+	void AddPosition(const Vector3& vector) {
 		worldTransform_.translation_ += vector;
 		worldTransform_.UpdateMatrix();
 	}
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+	Model* GetModelPtr() const { return model_; }
 
 	virtual ~Entity() {}
 
@@ -23,7 +24,7 @@ public:
 		model_->Draw(worldTransform_, Vp, textureHandle_);
 	}
 
-	//virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);
+	// virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);
 	virtual void Init(Model* model, const uint32_t& textureHandle);
 
 	virtual void Update() {}

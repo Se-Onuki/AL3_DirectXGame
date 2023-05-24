@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Header/Timer/Timer.h"
 
 namespace EnemyState {
 class Base;
@@ -10,20 +11,16 @@ class Enemy : public Entity {
 
 	EnemyState::Base* state_;
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	const uint16_t maxCooltime_ = 50;
+	std::list<std::unique_ptr<FunctionTimer>> fireTimerList_;
 	const float kBulletSpeed = 0.5f;
 
-	uint16_t cooltime_;
-	const uint16_t maxCooltime_ = 50;
 
 public:
-	void ResetCooltime() { cooltime_ = maxCooltime_; };
-	void FireTimer() {
-		if (--cooltime_ <= 0) {
-			Fire();
-			ResetCooltime();
-		}
-	}
 	void Fire();
+	void FireAndInit();
+	void SetFireTimer();
+	void FireTimerDelete();
 	void ChangeState(EnemyState::Base* newState);
 	const static float DefaultSpeed;
 	Enemy();
