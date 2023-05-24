@@ -6,6 +6,7 @@ namespace EnemyState {
 class Base;
 }
 class EnemyBullet;
+class Player;
 
 class Enemy : public Entity {
 
@@ -14,9 +15,11 @@ class Enemy : public Entity {
 	const uint16_t maxCooltime_ = 50;
 	std::list<std::unique_ptr<FunctionTimer>> fireTimerList_;
 	const float kBulletSpeed = 0.5f;
-
+	Player* player_ = nullptr;
 
 public:
+	void SetPlayer(Player* player) { player_ = player; };
+
 	void Fire();
 	void FireAndInit();
 	void SetFireTimer();

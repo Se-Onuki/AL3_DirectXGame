@@ -15,6 +15,7 @@ public:
 		worldTransform_.translation_ += vector;
 		worldTransform_.UpdateMatrix();
 	}
+	const Vector3& GetPosition() const { return worldTransform_.translation_; } 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	Model* GetModelPtr() const { return model_; }
 

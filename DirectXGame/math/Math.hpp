@@ -112,7 +112,6 @@ Matrix3x3 MakeOrthographicMatrix(const Vector2& LeftTop, const Vector2& RightBot
 Matrix3x3 MakeViewportMatrix(const Vector2& LeftTop, const Vector2& RightBottom);
 
 namespace Angle {
-struct Radian;
 
 struct Digree {
 	float digree;
@@ -123,5 +122,7 @@ struct Radian {
 	float radian;
 	float ToDigree();
 };
+
+//enum class 
 
 } // namespace Angle

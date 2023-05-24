@@ -27,6 +27,7 @@ void GameScene::Initialize() {
 
 	Enemy* enemy = new Enemy();
 	enemy->Init(playerModel, TextureManager::Load("white1x1.png"), {1.f, 3.f, 30.f});
+	enemy->SetPlayer(player_);
 
 	enemyList_.emplace_back(enemy);
 

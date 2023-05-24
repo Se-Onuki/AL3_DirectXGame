@@ -2,6 +2,8 @@
 #include "math/Math.hpp"
 #include <imgui.h>
 
+#include "Player.h"
+
 const float Enemy::DefaultSpeed = 0.2f;
 
 void Enemy::ChangeState(EnemyState::Base* newState) {
@@ -15,8 +17,10 @@ void Enemy::ChangeState(EnemyState::Base* newState) {
 
 void Enemy::Fire() {
 
-	Vector3 velocity(0, 0, kBulletSpeed);
-	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+	assert(player_);
+	assert(model_);
+
+	Vector3 velocity = (player_->GetPosition() - GetPosition()).Nomalize() * kBulletSpeed;
 
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Init(model_, worldTransform_.translation_, velocity);
@@ -114,6 +118,10 @@ void EnemyBullet::Init(Model* model, const Vector3& position, const Vector3& vel
 	Entity::Init(model, TextureManager::Load("white1x1.png"));
 	worldTransform_.translation_ = position;
 	velocity_ = velocity;
+	worldTransform_.scale_ = {0.5f, 0.5f, 3.f};
+	worldTransform_.rotation_.y = std::atan2(velocity.x, velocity.z);
+	worldTransform_.rotation_.x =
+	    std::atan2(-velocity.y, std::sqrt(std::powf(velocity.x, 2) + std::powf(velocity.z, 2)));
 }
 
 void EnemyBullet::Update() {

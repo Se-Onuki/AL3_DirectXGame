@@ -107,9 +107,3 @@ void Vector2::operator*=(const Matrix3x3 &matrix) {
 	assert(w != 0.0f);
 	*this / w; // 演算子のオーバーライド
 }
-
-
-
-Vector2::Vector2(float x, float y) : x(x), y(y)
-{
-}

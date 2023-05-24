@@ -5,7 +5,7 @@ struct Matrix2x2;
 struct Matrix3x3;
 
 struct Vector2 {
-	Vector2(float x = 0.f, float y = 0.f);
+	// Vector2(float x = 0.f, float y = 0.f) : x(x), y(y) {}
 
 	float x;
 	float y;
@@ -15,7 +15,7 @@ struct Vector2 {
 	/// </summary>
 	/// <param name="x">x座標</param>
 	/// <param name="y">y座標</param>
-	//void Printf(int x, int y) const;
+	// void Printf(int x, int y) const;
 
 	/// <summary>
 	/// ベクトルを回転させる
