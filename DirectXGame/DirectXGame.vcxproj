@@ -118,6 +118,7 @@
     <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math\Lerp.cpp" />
     <ClCompile Include="math\Math.cpp" />
     <ClCompile Include="math\Matrix2x2.cpp" />
     <ClCompile Include="math\Matrix3x3.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="Header\Timer\Timer.h" />
     <ClInclude Include="input\Input.h" />
+    <ClInclude Include="math\Lerp.h" />
     <ClInclude Include="math\Math.hpp" />
     <ClInclude Include="math\Matrix2x2.h" />
     <ClInclude Include="math\Matrix3x3.h" />

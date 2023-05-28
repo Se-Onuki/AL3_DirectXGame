@@ -65,10 +65,15 @@ class EnemyBullet : public Entity {
 	static const int32_t kLifeTime = 60 * 5;
 	int32_t deathTimer_ = kLifeTime;
 	bool isDead_ = false;
+	Player* player_ = nullptr;
+	const float kBulletSpeed = 0.5f;
 
 public:
 	EnemyBullet() {}
 	virtual ~EnemyBullet() {}
+	void SetPlayer(Player* player);
+
+	void SetFacing();
 
 	void Init(Model* model, const Vector3& position, const Vector3& velocity);
 	void Update() override;

@@ -1,5 +1,5 @@
 #pragma once
-//#include "Matrix3x3.hpp"
+// #include "Matrix3x3.hpp"
 
 #include <cmath>
 
@@ -17,7 +17,7 @@ struct Vector3 {
 	/// </summary>
 	/// <param name="x">x座標</param>
 	/// <param name="y">y座標</param>
-	//void Printf(int x, int y) const;
+	// void Printf(int x, int y) const;
 
 	/// <summary>
 	/// ベクトル長関数
@@ -46,13 +46,13 @@ struct Vector3 {
 		return Vector3{this->x - Second.x, this->y - Second.y, this->z - Second.z};
 	}
 
-	Vector3 &operator+=(const Vector3& Second) {
+	Vector3& operator+=(const Vector3& Second) {
 		this->x += Second.x;
 		this->y += Second.y;
 		this->z += Second.z;
 		return *this;
 	}
-	Vector3 &operator-=(const Vector3& Second) {
+	Vector3& operator-=(const Vector3& Second) {
 		this->x -= Second.x;
 		this->y -= Second.y;
 		this->z -= Second.z;
@@ -66,7 +66,7 @@ struct Vector3 {
 		return Vector3{this->x / Second, this->y / Second, this->z / Second};
 	}
 
-	Vector3 &operator*=(const float& Second) {
+	Vector3& operator*=(const float& Second) {
 		this->x *= Second;
 		this->y *= Second;
 		this->z *= Second;
@@ -91,7 +91,9 @@ struct Vector3 {
 	_NODISCARD inline Vector3 operator-() const { return *this * -1; }
 
 	// 内積
-	_NODISCARD inline float operator*(const Vector3& v) const { return x * v.x + y * v.y + z * v.z; }
+	_NODISCARD inline float operator*(const Vector3& v) const {
+		return x * v.x + y * v.y + z * v.z;
+	}
 	// 外積
 	// inline float operator^(const Vector3& v) const { return x * v.y - y * v.x; }
 
@@ -109,3 +111,5 @@ struct Vector3 {
 
 private:
 };
+
+inline Vector3 operator*(const float& left, const Vector3& right) { return right * left; }

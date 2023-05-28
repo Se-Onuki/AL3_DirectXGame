@@ -120,6 +120,9 @@
     <ClCompile Include="Header\Entity\Enemy.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="math\Lerp.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="Header\Timer\Timer.h">
       <Filter>Header\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Lerp.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
