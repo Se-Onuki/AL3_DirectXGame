@@ -5,6 +5,8 @@ PlayerBullet::PlayerBullet() {}
 
 PlayerBullet::~PlayerBullet() {}
 
+void PlayerBullet::OnCollision() { isDead_ = true; }
+
 void PlayerBullet::Init(Model* model, const Vector3& position, const Vector3& velocity) {
 	Entity::Init(model, TextureManager::Load("white1x1.png"));
 	worldTransform_.translation_ = position;

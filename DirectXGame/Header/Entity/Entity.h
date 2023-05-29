@@ -15,7 +15,7 @@ public:
 		worldTransform_.translation_ += vector;
 		worldTransform_.UpdateMatrix();
 	}
-	const Vector3& GetPosition() const { return worldTransform_.translation_; } 
+	const Vector3& GetPosition() const { return worldTransform_.translation_; }
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	Model* GetModelPtr() const { return model_; }
 
@@ -24,6 +24,8 @@ public:
 	virtual void Draw(const ViewProjection& Vp) {
 		model_->Draw(worldTransform_, Vp, textureHandle_);
 	}
+
+	virtual void OnCollision() = 0;
 
 	// virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);
 	virtual void Init(Model* model, const uint32_t& textureHandle);

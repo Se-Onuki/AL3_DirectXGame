@@ -11,11 +11,13 @@ void Player::Init(Model* model, const uint32_t& textureHandle) {
 	input_ = Input::GetInstance();
 }
 
+void Player::OnCollision() {}
+
 void Player::Update() {
 
-	bullets_.remove_if([](PlayerBullet* bullet) {
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		if (bullet->IsDead()) {
-			delete bullet;
+			bullet.reset();
 			return true;
 		}
 		return false;
@@ -96,7 +98,7 @@ void Player::Attack() {
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Init(model_, worldTransform_.translation_, velocity);
 
-		bullets_.push_back(newBullet);
+		bullets_.emplace_back(newBullet);
 	}
 }
 
@@ -110,12 +112,4 @@ void Player::Draw(const ViewProjection& Vp) {
 Player::Player() {}
 
 Player::~Player() {
-	for (auto& element : bullets_) {
-		if (element) {
-
-			delete element;
-			element = nullptr;
-		}
-	}
-	bullets_.clear();
 }

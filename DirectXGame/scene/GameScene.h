@@ -54,8 +54,11 @@ private: // メンバ変数
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
-	Player* player_ = nullptr;
+	std::unique_ptr<Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemyList_;
+
+	/// @brief 衝突判定と応答
+	void ChackAllCollision();
 
 	/// <summary>
 	/// ゲームシーン用

@@ -116,6 +116,7 @@
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
     <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
+    <ClCompile Include="Header\Object\Object.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Lerp.cpp" />
@@ -151,11 +152,13 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
+    <ClInclude Include="Header\Entity\CollisionManager.h" />
     <ClInclude Include="Header\Entity\Enemy.h" />
     <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\Player.h" />
     <ClInclude Include="Header\Entity\PlayerBullet.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
+    <ClInclude Include="Header\Object\Object.h" />
     <ClInclude Include="Header\Timer\Timer.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Lerp.h" />

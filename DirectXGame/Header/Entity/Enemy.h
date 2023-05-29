@@ -18,7 +18,10 @@ class Enemy : public Entity {
 	Player* player_ = nullptr;
 
 public:
+	const float collisionRadius = 0.5f;
 	void SetPlayer(Player* player) { player_ = player; };
+	void OnCollision() override;
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() const { return bullets_; }
 
 	void Fire();
 	void FireAndInit();
@@ -69,7 +72,9 @@ class EnemyBullet : public Entity {
 	const float kBulletSpeed = 0.5f;
 
 public:
+	const float collisionRadius = 0.5f;
 	EnemyBullet() {}
+	void OnCollision() override;
 	virtual ~EnemyBullet() {}
 	void SetPlayer(Player* player);
 

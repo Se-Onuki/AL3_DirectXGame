@@ -16,6 +16,8 @@ void Enemy::ChangeState(EnemyState::Base* newState) {
 	state_->Enter();
 }
 
+void Enemy::OnCollision() {}
+
 void Enemy::Fire() {
 
 	assert(player_);
@@ -117,6 +119,8 @@ void EnemyState::Leave::Update() {
 }
 
 void EnemyState::Leave::Exit() {}
+
+void EnemyBullet::OnCollision() { isDead_ = true; }
 
 void EnemyBullet::SetPlayer(Player* player) { player_ = player; }
 

@@ -11,12 +11,16 @@ class Player : public Entity {
 	const float kRotSpeed = 0.02f;
 	const float kBulletSpeed = 0.5f;
 
-	std::list<PlayerBullet*> bullets_;
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
 	void Attack();
 
 public:
+	const float collisionRadius = 0.5f;
 	void Init(Model* model, const uint32_t& textureHandle) override;
+
+	void OnCollision() override;
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullet() const { return bullets_; }
 	void Update() override;
 	void Draw(const ViewProjection& Vp) override;
 
