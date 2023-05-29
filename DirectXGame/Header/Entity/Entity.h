@@ -2,10 +2,7 @@
 #include "Header/ModelManager/ModelManager.h"
 #include <WorldTransform.h>
 
-enum class CollisionFilter {
-	Player = 0b00001,
-	Enemy = 0b00010
-};
+enum class CollisionFilter { Player = 0b00001, Enemy = 0b00010 };
 
 class Collider {
 	// 衝突属性(自分)
@@ -38,7 +35,11 @@ public:
 		worldTransform_.translation_ += vector;
 		worldTransform_.UpdateMatrix();
 	}
-	const Vector3& GetPosition() const { return worldTransform_.translation_; }
+	const Vector3 GetPosition() const {
+		if (worldTransform_.parent_ != nullptr)
+			return (worldTransform_.translation_ + worldTransform_.parent_->translation_);
+		return worldTransform_.translation_;
+	}
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
 	virtual void OnCollision() = 0;

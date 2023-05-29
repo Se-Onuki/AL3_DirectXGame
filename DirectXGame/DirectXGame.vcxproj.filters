@@ -132,6 +132,12 @@
     <ClCompile Include="Header\Entity\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Header\Object\SkyBox.cpp">
+      <Filter>Header\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Object\RailCamera.cpp">
+      <Filter>Header\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -255,6 +261,12 @@
       <Filter>Header\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Header\Object\Object.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Object\SkyBox.h">
+      <Filter>Header\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Object\RailCamera.h">
       <Filter>Header\Object</Filter>
     </ClInclude>
   </ItemGroup>

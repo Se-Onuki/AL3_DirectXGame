@@ -98,7 +98,7 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Init(model_, worldTransform_.translation_, velocity);
+		newBullet->Init(model_, GetPosition(), velocity);
 
 		bullets_.emplace_back(newBullet);
 	}

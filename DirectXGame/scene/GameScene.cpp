@@ -19,13 +19,22 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	railCamera_.reset(new RailCamera());
+	railCamera_->Init(Vector3::zero(), Vector3::zero());
+
 	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
 	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");
 
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
+	player_->SetParent(&railCamera_->GetWorldTransform());
+	player_->AddPosition({0, 0, 20.f});
 
-	collisionManager = CollisionManager::GetInstance();
+	collisionManager_ = CollisionManager::GetInstance();
+
+	ModelManager::GetInstance()->AddModel("SkyBox", Model::CreateFromOBJ("SkyBox"));
+	skyBox_.reset(new SkyBox());
+	skyBox_->Init();
 
 	Enemy* enemy = new Enemy();
 	enemy->Init(playerModel, TextureManager::Load("white1x1.png"), {1.f, 3.f, 60.f});
@@ -42,23 +51,23 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 #pragma region AddCollisionManager
-	collisionManager->clear();
+	collisionManager_->clear();
 
-	collisionManager->push_back(player_.get());
+	collisionManager_->push_back(player_.get());
 	for (auto& pBullet : player_->GetBullet()) {
-		collisionManager->push_back(pBullet.get());
+		collisionManager_->push_back(pBullet.get());
 	}
 	for (auto& enemy : enemyList_) {
-		collisionManager->push_back(enemy.get());
+		collisionManager_->push_back(enemy.get());
 	}
 
 	for (auto& enemy : enemyList_) {
 		for (auto& eBullet : enemy->GetBullet()) {
-			collisionManager->push_back(eBullet.get());
+			collisionManager_->push_back(eBullet.get());
 		}
 	}
 
-	collisionManager->ChackAllCollision();
+	collisionManager_->ChackAllCollision();
 
 #pragma endregion
 
@@ -81,6 +90,13 @@ void GameScene::Update() {
 	} else {
 		viewProjection_.UpdateMatrix();
 	}
+
+	railCamera_->Update();
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
+
+	skyBox_->Update();
 }
 
 void GameScene::Draw() {
@@ -113,6 +129,7 @@ void GameScene::Draw() {
 	for (auto& enemy : enemyList_) {
 		enemy->Draw(viewProjection_);
 	}
+	skyBox_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

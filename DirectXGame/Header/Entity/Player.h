@@ -16,6 +16,8 @@ class Player : public Entity {
 	void Attack();
 
 public:
+
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 	void Init(Model* model, const uint32_t& textureHandle) override;
 
 	void OnCollision() override;
