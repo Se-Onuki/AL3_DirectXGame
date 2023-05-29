@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "math/Lerp.h"
 
-const float Enemy::DefaultSpeed = 0.2f;
+const float Enemy::DefaultSpeed = 0.1f;
 
 void Enemy::ChangeState(EnemyState::Base* newState) {
 	if (state_)
@@ -53,6 +53,9 @@ void Enemy::Init(Model* model, const uint32_t& textureHandle, const Vector3& pos
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = Angle::Digree(180).ToRadian();
 	worldTransform_.UpdateMatrix();
+
+	SetCollisionAttribute(static_cast<uint32_t>(CollisionFilter::Enemy));
+	SetCollisionMask(~(static_cast<uint32_t>(CollisionFilter::Enemy)));
 }
 
 void Enemy::Update() {
@@ -136,11 +139,14 @@ void EnemyBullet::Init(Model* model, const Vector3& position, const Vector3& vel
 	velocity_ = velocity;
 	worldTransform_.scale_ = {0.5f, 0.5f, 3.f};
 	SetFacing();
+
+	SetCollisionAttribute(static_cast<uint32_t>(CollisionFilter::Enemy));
+	SetCollisionMask(~(static_cast<uint32_t>(CollisionFilter::Enemy)));
 }
 
 void EnemyBullet::Update() {
 	velocity_ =
-	    Slerp(velocity_, (player_->GetPosition() - worldTransform_.translation_), 0.1f).Nomalize() *
+	    Slerp(velocity_, (player_->GetPosition() - worldTransform_.translation_), 0.025f).Nomalize() *
 	    kBulletSpeed;
 	SetFacing();
 	Move();

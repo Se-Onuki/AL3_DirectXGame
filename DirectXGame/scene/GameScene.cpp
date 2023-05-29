@@ -110,55 +110,40 @@ void GameScene::Draw() {
 }
 
 void GameScene::ChackAllCollision() {
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
-	Entity *entityA = nullptr, *entityB = nullptr;
+	std::list<Collider*> colliderList;
+	Collider *colliderA, *colliderB;
 
-#pragma region 自キャラと敵弾との当たり判定
-
-	entityA = player_.get();
+	colliderList.push_back(player_.get());
+	for (auto& pBullet : player_->GetBullet()) {
+		colliderList.push_back(pBullet.get());
+	}
 	for (auto& enemy : enemyList_) {
-		for (auto& enemyBullet : enemy->GetBullet()) {
-			entityB = enemyBullet.get();
-			CheckCollisionPair(entityA, entityB);
-		}
+		colliderList.push_back(enemy.get());
 	}
-
-	entityA = nullptr;
-	entityB = nullptr;
-#pragma endregion
-
-#pragma region 自弾と敵キャラとの当たり判定
-
 	for (auto& enemy : enemyList_) {
-		entityA = enemy.get();
-		for (auto& pBullet : playerBullets) {
-			entityB = pBullet.get();
-			CheckCollisionPair(entityA, entityB);
+		for (auto& eBullet : enemy->GetBullet()) {
+			colliderList.push_back(eBullet.get());
 		}
 	}
 
-	entityA = nullptr;
-	entityB = nullptr;
-#pragma endregion
-
-#pragma region 自弾と敵弾との当たり判定
-
-	for (auto& pBullet : playerBullets) {
-		entityA = pBullet.get();
-		for (auto& enemy : enemyList_) {
-			for (auto& eBullet : enemy->GetBullet()) {
-				entityB = eBullet.get();
-				CheckCollisionPair(entityA, entityB);
-			}
+	std::list<Collider*>::iterator itrA = colliderList.begin();
+	for (; itrA != colliderList.end(); ++itrA) {
+		colliderA = *itrA;
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
+		for (; itrB != colliderList.end(); ++itrB) {
+			colliderB = *itrB;
+			CheckCollisionPair(colliderA, colliderB);
 		}
 	}
-
-	entityA = nullptr;
-	entityB = nullptr;
-#pragma endregion
 }
 
-void GameScene::CheckCollisionPair(Entity* A, Entity* B) const {
+void GameScene::CheckCollisionPair(Collider* A, Collider* B) const {
+	auto test = (A->GetCollisionAttribute() & B->GetCollisionMask());
+	test = test;
+	if ((A->GetCollisionAttribute() & B->GetCollisionMask()) == 0u ||
+	    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0u)
+		return;
 	if ((A->GetPosition() - B->GetPosition()).Length() <= A->GetRadius() + B->GetRadius()) {
 		A->OnCollision();
 		B->OnCollision();

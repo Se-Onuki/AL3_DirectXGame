@@ -60,7 +60,7 @@ private: // メンバ変数
 	/// @brief 衝突判定と応答
 	void ChackAllCollision();
 
-	void CheckCollisionPair(Entity* A, Entity* B) const;
+	void CheckCollisionPair(Collider* A, Collider* B) const;
 
 	/// <summary>
 	/// ゲームシーン用

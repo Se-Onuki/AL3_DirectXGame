@@ -9,6 +9,8 @@
 void Player::Init(Model* model, const uint32_t& textureHandle) {
 	Entity::Init(model, textureHandle);
 	input_ = Input::GetInstance();
+	SetCollisionAttribute(static_cast<uint32_t>(CollisionFilter::Player));
+	SetCollisionMask(~(static_cast<uint32_t>(CollisionFilter::Player)));
 }
 
 void Player::OnCollision() {}
@@ -111,5 +113,4 @@ void Player::Draw(const ViewProjection& Vp) {
 
 Player::Player() {}
 
-Player::~Player() {
-}
+Player::~Player() {}
