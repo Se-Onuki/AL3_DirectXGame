@@ -4,8 +4,6 @@
 #include "math/Vector3.h"
 #include <vector>
 
-struct Collider {};
-
 struct Sphere {
 	Vector3 center;
 	float radius;

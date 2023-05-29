@@ -9,8 +9,14 @@ protected:
 	uint32_t textureHandle_ = 0u;
 
 	Vector3 velocity_ = {};
+	float radius = 0.5f;
 
 public:
+	const float& GetRadius() const { return radius; }
+	void SetRadius(const float& rad) { radius = rad; }
+
+
+
 	void AddPosition(const Vector3& vector) {
 		worldTransform_.translation_ += vector;
 		worldTransform_.UpdateMatrix();

@@ -16,7 +16,6 @@ class Player : public Entity {
 	void Attack();
 
 public:
-	const float collisionRadius = 0.5f;
 	void Init(Model* model, const uint32_t& textureHandle) override;
 
 	void OnCollision() override;

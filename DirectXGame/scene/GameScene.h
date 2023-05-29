@@ -10,8 +10,8 @@
 #include "WorldTransform.h"
 
 #include "DebugCamera.h"
-#include "Header/Entity/Player.h"
 #include "Header/Entity/Enemy.h"
+#include "Header/Entity/Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -59,6 +59,8 @@ private: // メンバ変数
 
 	/// @brief 衝突判定と応答
 	void ChackAllCollision();
+
+	void CheckCollisionPair(Entity* A, Entity* B) const;
 
 	/// <summary>
 	/// ゲームシーン用

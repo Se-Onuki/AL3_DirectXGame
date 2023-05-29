@@ -110,55 +110,57 @@ void GameScene::Draw() {
 }
 
 void GameScene::ChackAllCollision() {
-
-	const Vector3& playerPosition = player_->GetPosition();
-	const float& playerRadius = player_->collisionRadius;
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
+	Entity *entityA = nullptr, *entityB = nullptr;
 
 #pragma region 自キャラと敵弾との当たり判定
 
+	entityA = player_.get();
 	for (auto& enemy : enemyList_) {
 		for (auto& enemyBullet : enemy->GetBullet()) {
-			if (ChackSphereCollision(
-			        playerPosition, playerRadius, enemyBullet->GetPosition(),
-			        enemyBullet->collisionRadius)) {
-				player_->OnCollision();
-				enemyBullet->OnCollision();
-			}
+			entityB = enemyBullet.get();
+			CheckCollisionPair(entityA, entityB);
 		}
 	}
 
+	entityA = nullptr;
+	entityB = nullptr;
 #pragma endregion
 
 #pragma region 自弾と敵キャラとの当たり判定
 
 	for (auto& enemy : enemyList_) {
+		entityA = enemy.get();
 		for (auto& pBullet : playerBullets) {
-			if (ChackSphereCollision(
-			        pBullet->GetPosition(), pBullet->collisionRadius, enemy->GetPosition(),
-			        enemy->collisionRadius)) {
-				enemy->OnCollision();
-				pBullet->OnCollision();
-			}
+			entityB = pBullet.get();
+			CheckCollisionPair(entityA, entityB);
 		}
 	}
 
+	entityA = nullptr;
+	entityB = nullptr;
 #pragma endregion
 
 #pragma region 自弾と敵弾との当たり判定
 
 	for (auto& pBullet : playerBullets) {
+		entityA = pBullet.get();
 		for (auto& enemy : enemyList_) {
 			for (auto& eBullet : enemy->GetBullet()) {
-				if (ChackSphereCollision(
-				        pBullet->GetPosition(), pBullet->collisionRadius, eBullet->GetPosition(),
-				        eBullet->collisionRadius)) {
-					pBullet->OnCollision();
-					eBullet->OnCollision();
-				}
+				entityB = eBullet.get();
+				CheckCollisionPair(entityA, entityB);
 			}
 		}
 	}
 
+	entityA = nullptr;
+	entityB = nullptr;
 #pragma endregion
+}
+
+void GameScene::CheckCollisionPair(Entity* A, Entity* B) const {
+	if ((A->GetPosition() - B->GetPosition()).Length() <= A->GetRadius() + B->GetRadius()) {
+		A->OnCollision();
+		B->OnCollision();
+	}
 }

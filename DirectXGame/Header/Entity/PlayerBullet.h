@@ -8,7 +8,6 @@ class PlayerBullet : public Entity {
 	bool isDead_ = false;
 
 public:
-	const float collisionRadius = 0.5f;
 	PlayerBullet();
 	~PlayerBullet();
 	void OnCollision() override;
