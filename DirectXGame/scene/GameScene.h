@@ -13,6 +13,8 @@
 #include "Header/Entity/Enemy.h"
 #include "Header/Entity/Player.h"
 
+class CollisionManager;
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -57,10 +59,7 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemyList_;
 
-	/// @brief 衝突判定と応答
-	void ChackAllCollision();
-
-	void CheckCollisionPair(Collider* A, Collider* B) const;
+	CollisionManager* collisionManager = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

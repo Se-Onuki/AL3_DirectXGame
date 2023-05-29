@@ -5,6 +5,7 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "Header/Entity/CollisionManager.h"
 #include "Header/Entity/PlayerBullet.h"
 #include "Header/Object/Object.h"
 
@@ -24,6 +25,8 @@ void GameScene::Initialize() {
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
 
+	collisionManager = CollisionManager::GetInstance();
+
 	Enemy* enemy = new Enemy();
 	enemy->Init(playerModel, TextureManager::Load("white1x1.png"), {1.f, 3.f, 60.f});
 	enemy->SetPlayer(player_.get());
@@ -38,7 +41,27 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	ChackAllCollision();
+#pragma region AddCollisionManager
+	collisionManager->clear();
+
+	collisionManager->push_back(player_.get());
+	for (auto& pBullet : player_->GetBullet()) {
+		collisionManager->push_back(pBullet.get());
+	}
+	for (auto& enemy : enemyList_) {
+		collisionManager->push_back(enemy.get());
+	}
+
+	for (auto& enemy : enemyList_) {
+		for (auto& eBullet : enemy->GetBullet()) {
+			collisionManager->push_back(eBullet.get());
+		}
+	}
+
+	collisionManager->ChackAllCollision();
+
+#pragma endregion
+
 	player_->Update();
 	for (auto& enemy : enemyList_) {
 		enemy->Update();
@@ -107,45 +130,4 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
-}
-
-void GameScene::ChackAllCollision() {
-	std::list<Collider*> colliderList;
-	Collider *colliderA, *colliderB;
-
-	colliderList.push_back(player_.get());
-	for (auto& pBullet : player_->GetBullet()) {
-		colliderList.push_back(pBullet.get());
-	}
-	for (auto& enemy : enemyList_) {
-		colliderList.push_back(enemy.get());
-	}
-	for (auto& enemy : enemyList_) {
-		for (auto& eBullet : enemy->GetBullet()) {
-			colliderList.push_back(eBullet.get());
-		}
-	}
-
-	std::list<Collider*>::iterator itrA = colliderList.begin();
-	for (; itrA != colliderList.end(); ++itrA) {
-		colliderA = *itrA;
-		std::list<Collider*>::iterator itrB = itrA;
-		itrB++;
-		for (; itrB != colliderList.end(); ++itrB) {
-			colliderB = *itrB;
-			CheckCollisionPair(colliderA, colliderB);
-		}
-	}
-}
-
-void GameScene::CheckCollisionPair(Collider* A, Collider* B) const {
-	auto test = (A->GetCollisionAttribute() & B->GetCollisionMask());
-	test = test;
-	if ((A->GetCollisionAttribute() & B->GetCollisionMask()) == 0u ||
-	    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0u)
-		return;
-	if ((A->GetPosition() - B->GetPosition()).Length() <= A->GetRadius() + B->GetRadius()) {
-		A->OnCollision();
-		B->OnCollision();
-	}
 }

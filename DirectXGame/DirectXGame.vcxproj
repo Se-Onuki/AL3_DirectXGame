@@ -112,6 +112,7 @@
     <ClCompile Include="3d\WorldTransform.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
+    <ClCompile Include="Header\Entity\CollisionManager.cpp" />
     <ClCompile Include="Header\Entity\Enemy.cpp" />
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
