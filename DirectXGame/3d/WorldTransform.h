@@ -48,4 +48,7 @@ struct WorldTransform {
 
 	/// @brief 行列を計算・転送する
 	void UpdateMatrix();
+
+	/// @brief 行列を計算する
+	void CalcMatrix();
 };

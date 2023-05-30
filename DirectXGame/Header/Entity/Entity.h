@@ -37,7 +37,7 @@ public:
 	}
 	const Vector3 GetPosition() const {
 		if (worldTransform_.parent_ != nullptr)
-			return (worldTransform_.translation_ + worldTransform_.parent_->translation_);
+			return (worldTransform_.translation_ * worldTransform_.parent_->matWorld_);
 		return worldTransform_.translation_;
 	}
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }

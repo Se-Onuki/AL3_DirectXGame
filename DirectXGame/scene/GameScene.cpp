@@ -19,6 +19,16 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	rail_.reset(new Rail());
+	rail_->AddPoint(std::vector<Vector3>{
+	    {0,   0,  0 },
+	    {0,   0,  10},
+	    {10,  10, 20},
+	    {-10, 0,  40},
+	    {20, 0,  100},
+	});
+	rail_->CalcDrawPosition(30);
+
 	railCamera_.reset(new RailCamera());
 	railCamera_->Init(Vector3::zero(), Vector3::zero());
 
@@ -28,7 +38,7 @@ void GameScene::Initialize() {
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
 	player_->SetParent(&railCamera_->GetWorldTransform());
-	player_->AddPosition({0, 0, 20.f});
+	player_->AddPosition({0, 0, 50.f});
 
 	collisionManager_ = CollisionManager::GetInstance();
 
@@ -50,6 +60,12 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	railCamera_->Update();
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
+
 #pragma region AddCollisionManager
 	collisionManager_->clear();
 
@@ -84,17 +100,12 @@ void GameScene::Update() {
 #endif // _DEBUG
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matView *= debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
+		// viewProjection_.UpdateMatrix();
 	}
-
-	railCamera_->Update();
-	viewProjection_.matView = railCamera_->GetViewProjection().matView;
-	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-	viewProjection_.TransferMatrix();
 
 	skyBox_->Update();
 }
@@ -130,6 +141,8 @@ void GameScene::Draw() {
 		enemy->Draw(viewProjection_);
 	}
 	skyBox_->Draw(viewProjection_);
+
+	rail_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -118,6 +118,7 @@
     <ClCompile Include="Header\Entity\Player.cpp" />
     <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
     <ClCompile Include="Header\Object\Object.cpp" />
+    <ClCompile Include="Header\Object\Rail.cpp" />
     <ClCompile Include="Header\Object\RailCamera.cpp" />
     <ClCompile Include="Header\Object\SkyBox.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Header\Entity\PlayerBullet.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="Header\Object\Object.h" />
+    <ClInclude Include="Header\Object\Rail.h" />
     <ClInclude Include="Header\Object\RailCamera.h" />
     <ClInclude Include="Header\Object\SkyBox.h" />
     <ClInclude Include="Header\Timer\Timer.h" />

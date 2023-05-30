@@ -5,7 +5,7 @@
 void SkyBox::Init() {
 	model_ = ModelManager::GetInstance()->GetModel("SkyBox");
 	worldTransform_.Initialize();
-	worldTransform_.scale_ *= 100;
+	worldTransform_.scale_ *= 500.f;
 }
 
 void SkyBox::Update() { worldTransform_.UpdateMatrix(); }

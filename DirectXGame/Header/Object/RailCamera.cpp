@@ -2,16 +2,16 @@
 #include <imgui.h>
 
 void RailCamera::Init(const Vector3& position, const Vector3& rotate) {
-	worldTransform_.Initialize();
+	worldTransform_.scale_ = {1, 1, 1};
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_ = rotate;
 	viewProjection_.Initialize();
 }
 
 void RailCamera::Update() {
-	worldTransform_.translation_ += Vector3{0, 0, -0.1f};
+	worldTransform_.translation_ += Vector3{0, 0, 0.1f};
 	worldTransform_.rotation_ += Vector3::zero();
-	worldTransform_.UpdateMatrix();
+	worldTransform_.CalcMatrix();
 
 	viewProjection_.matView = worldTransform_.matWorld_.Inverse();
 
