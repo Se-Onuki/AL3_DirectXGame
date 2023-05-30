@@ -20,17 +20,23 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	rail_.reset(new Rail());
+	rail_->Init();
 	rail_->AddPoint(std::vector<Vector3>{
-	    {0,   0,  0 },
-	    {0,   0,  10},
-	    {10,  10, 20},
-	    {-10, 0,  40},
-	    {20, 0,  100},
+	    {0,   0,  0   },
+	    {0,   0,  20  },
+	    {10,  10, 50  },
+	    {10,  20, 100 },
+	    {-10, 0,  200 },
+	    {-50, 0,  200 },
+	    {0,   0,  -300},
+	    {100, 0,  -300},
+	    {0,   0,  0   },
 	});
 	rail_->CalcDrawPosition(30);
 
 	railCamera_.reset(new RailCamera());
 	railCamera_->Init(Vector3::zero(), Vector3::zero());
+	railCamera_->SetRail(rail_.get());
 
 	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
 	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");

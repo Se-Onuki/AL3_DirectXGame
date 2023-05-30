@@ -31,10 +31,10 @@ public:
 	Curve(const std::vector<Vector3>& pos) { AddPoint(pos); }
 	void AddPoint(const Vector3& pos) { pointList_.push_back(pos); }
 	void AddPoint(const std::vector<Vector3>& pos) {
-		for (auto& element : pos) {
-			pointList_.push_back(element);
-		}
+		pointList_.insert(pointList_.end(), pos.begin(), pos.end());
 	}
+
+	inline const std::vector<Vector3>& GetPointList() const { return pointList_; }
 };
 
 class Bezier : public Curve {
@@ -70,40 +70,42 @@ public:
 
 class Catmull : public Curve {
 
-	static inline Vector3 GetTangent(
-	    const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3,
-	    const float& t) {
-		return ((-p0 + 3 * p1 - 3 * p2 + p3) * 3 * powf(t, 2) +
-		        (2 * p0 - 5 * p1 + 4 * p2 - p3) * 2 * t + (-p0 + p2)) /
-		       2;
+public:
+	using Curve::Curve;
+
+	/// @brief Catmull-Rom スプライン曲線上の座標
+	/// @param t 線形補間係数(整数は制御点リストの添え字と同義)
+	/// @return 曲線上の座標
+	inline Vector3 GetStructFacing(const float& t) const { return GetStructFacing(pointList_, t); }
+
+	/// @brief Catmull-Rom スプライン曲線上の座標
+	/// @param points 制御点リスト
+	/// @param t 線形補間係数(整数は制御点リストの添え字と同義)
+	/// @return 曲線上の座標
+	static inline Vector3 GetStructFacing(const std::vector<Vector3>& points, const float& t) {
+		if (points.size() < 4)
+			return points[0];
+		int index = static_cast<int>(std::floorf(t));
+		if (index == 0) {
+			return GetStructFacing(points[0], points[0], points[1], points[2], t);
+		}
+		if (index == points.size() - 2) {
+			return GetStructFacing(
+			    points[index - 1], points[index], points[index + 1], points[index + 1], t - index);
+		}
+		if (index == points.size() - 1) {
+			return points[index];
+		}
+		return GetStructFacing(
+		    points[index - 1], points[index], points[index + 1], points[index + 2], t - index);
 	}
+
 	/// @brief Catmull-Rom スプライン曲線上の座標
 	/// @param t 線形補間係数(整数は制御点リストの添え字と同義)
 	/// @return 曲線上の座標
 	inline Vector3 GetStructPosition(const float& t) const {
-		if (this->pointList_.size() < 4)
-			return pointList_[0];
-		int index = static_cast<int>(std::floorf(t));
-		if (index == 0) {
-			return GetStructPosition(
-			    this->pointList_[0], this->pointList_[0], this->pointList_[1], this->pointList_[2],
-			    t);
-		}
-		if (index == this->pointList_.size() - 2) {
-			return GetStructPosition(
-			    this->pointList_[index - 1], this->pointList_[index], this->pointList_[index + 1],
-			    this->pointList_[index + 1], t - index);
-		}
-		if (index == this->pointList_.size() - 1) {
-			return this->pointList_[index];
-		}
-		return GetStructPosition(
-		    this->pointList_[index - 1], this->pointList_[index], this->pointList_[index + 1],
-		    this->pointList_[index + 2], t - index);
+		return GetStructPosition(pointList_, t);
 	}
-
-public:
-	using Curve::Curve;
 
 	/// @brief Catmull-Rom スプライン曲線上の座標
 	/// @param points 制御点リスト
@@ -139,6 +141,13 @@ public:
 	    const float& t) {
 		return ((-p0 + 3 * p1 - 3 * p2 + p3) * powf(t, 3) +
 		        (2 * p0 - 5 * p1 + 4 * p2 - p3) * powf(t, 2) + (-p0 + p2) * t + 2 * p1) /
+		       2;
+	}
+	// Catmull-Romスプライン曲線の微分
+	static inline Vector3 GetStructFacing(
+	    const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) {
+		return ((-p0 + 3 * p1 - 3 * p2 + p3) * 3.0f * powf(t, 2) +
+		        (2 * p0 - 5 * p1 + 4 * p2 - p3) * 2.0f * t + (-p0 + p2)) /
 		       2;
 	}
 
