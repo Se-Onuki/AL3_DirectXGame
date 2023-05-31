@@ -77,38 +77,88 @@ void Player::Update(const ViewProjection& Vp) {
 
 	worldTransform_.UpdateMatrix();
 
-	ImGui::Begin("playerPosition");
-	ImGui::Text("x: %.2f, y: %.2f, z: %.2f", translate.x, translate.y, translate.z);
+	ImGui::Begin("Player");
+	ImGui::Text("Position( %+.2f, %+.2f, %+.2f)", translate.x, translate.y, translate.z);
 	ImGui::End();
 
-	const float kDistancePlayerTo3DReticle = 50.f;
-	Vector3 offset{0.f, 0.f, 1.f};
-	offset = TransformNormal(offset, GetWorldTransform().matWorld_);
-	offset = offset.Nomalize() * kDistancePlayerTo3DReticle;
+#pragma region Mouse
 
-	worldTransform3DReticle_.translation_ = offset + GetPosition();
-	worldTransform3DReticle_.UpdateMatrix();
+	POINT mousePosition;
+	GetCursorPos(&mousePosition);
+
+	HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	ScreenToClient(hwnd, &mousePosition);
+
+#pragma endregion
 
 #pragma region Target2D
 
-	Vector3 positionReticle = worldTransform3DReticle_.translation_;
-	Matrix4x4 matViewport =
-	    Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-	Matrix4x4 matViewProjectionViewport = Vp.matView * Vp.matProjection * matViewport;
-	positionReticle = positionReticle * matViewProjectionViewport;
-	sprite2DReticle_->SetPosition({positionReticle.x, positionReticle.y});
+	sprite2DReticle_->SetPosition(
+	    {static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)});
+
+	// Vector3 positionReticle = worldTransform3DReticle_.translation_;
+	// Matrix4x4 matViewport =
+	//     Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	// Matrix4x4 matViewProjectionViewport = Vp.matView * Vp.matProjection * matViewport;
+	// positionReticle = positionReticle * matViewProjectionViewport;
+	// sprite2DReticle_->SetPosition({positionReticle.x, positionReticle.y});
 
 #pragma endregion
+
+#pragma region 2D->3D
+
+	Matrix4x4 matViewport =
+	    Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+	Matrix4x4 matVPV = Vp.matView * Vp.matProjection * matViewport;
+	Matrix4x4 matInvarseVPV = matVPV.Inverse();
+
+	Vector3 posNear{static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y), 0.f};
+	Vector3 posFar{static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y), 1.f};
+
+	posNear = posNear * matInvarseVPV;
+	posFar = posFar * matInvarseVPV;
+
+#pragma endregion
+
+#pragma region segment->Vector3
+
+	Vector3 mouseDirection = posFar - posNear;
+	mouseDirection = mouseDirection.Nomalize();
+	const float kDistanceTestObject = 100.f;
+	worldTransform3DReticle_.translation_ =
+	    mouseDirection.Nomalize() * kDistanceTestObject + posNear;
+	worldTransform3DReticle_.UpdateMatrix();
+
+#pragma endregion
+
+	// const float kDistancePlayerTo3DReticle = 50.f;
+	// Vector3 offset{0.f, 0.f, 1.f};
+	// offset = TransformNormal(offset, GetWorldTransform().matWorld_);
+	// offset = offset.Nomalize() * kDistancePlayerTo3DReticle;
+
+	// worldTransform3DReticle_.translation_ = offset + GetPosition();
+	// worldTransform3DReticle_.UpdateMatrix();
 
 #pragma region 攻撃処理
 
 	Attack();
 
 #pragma endregion
+
+	ImGui::Begin("Player");
+	ImGui::Text(
+	    "2DReticle:( %.2f, %.2f)", sprite2DReticle_->GetPosition().x,
+	    sprite2DReticle_->GetPosition().y);
+	ImGui::Text("Near:( %+.2f, %+.2f, %+.2f)", posNear.x, posNear.y, posNear.z);
+	ImGui::Text("Far:( %+.2f, %+.2f, %+.2f)", posFar.x, posFar.y, posFar.z);
+	ImGui::Text(
+	    "3DReticle:( %+.2f, %+.2f, %+.2f)", worldTransform3DReticle_.translation_.x,
+	    worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
+	ImGui::End();
 }
 
 void Player::Attack() {
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->IsTriggerMouse(0)) {
 
 		// Vector3 velocity(0, 0, kBulletSpeed);
 		// velocity = TransformNormal(velocity, worldTransform_.matWorld_);
@@ -124,7 +174,7 @@ void Player::Attack() {
 
 void Player::Draw(const ViewProjection& Vp) {
 	Entity::Draw(Vp);
-	//model_->Draw(worldTransform3DReticle_, Vp, textureHandle_);
+	model_->Draw(worldTransform3DReticle_, Vp, textureHandle_);
 	/*for (auto& element : *bullets_) {
 	    element->Draw(Vp);
 	}*/

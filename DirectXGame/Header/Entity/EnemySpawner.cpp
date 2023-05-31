@@ -11,10 +11,8 @@ void EnemySpawner::LoadCSV(const std::string& file_path) {
 		SpawnerCommand spawnCommand;
 		spawnCommand.flame = static_cast<uint32_t>(std::stoul(line["Flame"]));
 		spawnCommand.commandName = line["CommanName"];
-		// if (spawnCommand.commandName == "POP") {
 		spawnCommand.spawnPoint = {
 		    std::stof(line["x"]), std::stof(line["y"]), std::stof(line["z"])};
-		// }
 		spawnerData_.push_back(spawnCommand);
 	}
 }

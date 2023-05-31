@@ -9,11 +9,11 @@ class Camera;
 class Triangle;
 
 class Render final {
-	//Matrix4x4 viewportMatrix_;
+	// Matrix4x4 viewportMatrix_;
 
 public:
-	//std::vector<Triangle> ndcSurface_;
-	//std::vector<Triangle> screenSurface_;
+	// std::vector<Triangle> ndcSurface_;
+	// std::vector<Triangle> screenSurface_;
 
 	Render() {}
 	~Render() {}
@@ -41,25 +41,4 @@ public:
 	    const float& Left, const float& Top, const float& width, const float& height,
 	    const float& minDepth, const float& maxDepth);
 
-	void SetViewportMatrix(const Matrix4x4& viewport);
-
-	//_NODISCARD const Matrix4x4& GetViewportMatrix() { return viewportMatrix_; }
-
-	//void UpdateSurface();
-
-	//void Draw() const;
-
-	//void DrawGrid(
-	//    const Matrix4x4& viewProjectionMatrix, const float& radius = 2.f,
-	//    const uint32_t& subdivision = 10u) const;
-
-	//void DrawSphere(
-	//    const Matrix4x4& viewProjectionMatrix, const Sphere& sphere,
-	//    const uint32_t& color = 0xFFFFFFFF, const uint32_t& subdivision = 10u) const;
-
-	//void DrawLine(
-	//    const Matrix4x4& viewProjectionMatrix, const Segment& segment, const uint32_t& color) const;
-
-	//void DrawPlane(
-	//    const Matrix4x4& viewProjectionMatrix, const Plane& plane, const uint32_t& color) const;
 };
