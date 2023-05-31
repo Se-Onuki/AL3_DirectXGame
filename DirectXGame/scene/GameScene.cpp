@@ -13,6 +13,16 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() { delete debugCamera_; }
 
+void GameScene::AddEnemy(const Vector3& position) {
+	Model* box = ModelManager::GetInstance()->GetModel("playerModel");
+	Enemy* enemy = new Enemy();
+	enemy->Init(box, TextureManager::Load("white1x1.png"), position);
+	enemy->SetPlayer(player_.get());
+	enemy->SetGameScene(this);
+
+	enemyList_.emplace_back(enemy);
+}
+
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -22,15 +32,15 @@ void GameScene::Initialize() {
 	rail_.reset(new Rail());
 	rail_->Init();
 	rail_->AddPoint(std::vector<Vector3>{
-	    {0,   0,  0   },
-	    {0,   0,  20  },
-	    {10,  10, 50  },
-	    {10,  20, 100 },
-	    {-10, 0,  200 },
-	    {-50, 0,  200 },
-	    {0,   0,  -300},
-	    {100, 0,  -300},
-	    {0,   0,  0   },
+	    {0,   0,   0   },
+	    {0,   0,   20  },
+	    {5,   0,   50  },
+	    {10,  0,   100 },
+	    {-10, 50,  200 },
+	    {-50, 20,  200 },
+	    {0,   -30, -300},
+	    {100, -10, -300},
+	    {0,   0,   0   },
 	});
 	rail_->CalcDrawPosition(30);
 
@@ -45,6 +55,7 @@ void GameScene::Initialize() {
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->AddPosition({0, 0, 50.f});
+	player_->SetGameScene(this);
 
 	collisionManager_ = CollisionManager::GetInstance();
 
@@ -52,11 +63,10 @@ void GameScene::Initialize() {
 	skyBox_.reset(new SkyBox());
 	skyBox_->Init();
 
-	Enemy* enemy = new Enemy();
-	enemy->Init(playerModel, TextureManager::Load("white1x1.png"), {1.f, 3.f, 60.f});
-	enemy->SetPlayer(player_.get());
-
-	enemyList_.emplace_back(enemy);
+	enemySpawner_.reset(new EnemySpawner());
+	enemySpawner_->Init();
+	enemySpawner_->SetGameScene(this);
+	enemySpawner_->LoadCSV("./Resources/enemyPop.csv");
 
 	viewProjection_.Initialize();
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
@@ -72,30 +82,60 @@ void GameScene::Update() {
 	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
 	viewProjection_.TransferMatrix();
 
+	playerBulletList_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+		if (bullet->IsDead()) {
+			bullet.reset();
+			return true;
+		}
+		return false;
+	});
+
+	enemyList_.remove_if([](std::unique_ptr<Enemy>& enemy) {
+		if (enemy->IsDead()) {
+			enemy.reset();
+			return true;
+		}
+		return false;
+	});
+
+	enemyBulletList_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		if (bullet->IsDead()) {
+			bullet.reset();
+			return true;
+		}
+		return false;
+	});
+
 #pragma region AddCollisionManager
 	collisionManager_->clear();
 
 	collisionManager_->push_back(player_.get());
-	for (auto& pBullet : player_->GetBullet()) {
+	for (auto& pBullet : playerBulletList_) {
 		collisionManager_->push_back(pBullet.get());
 	}
 	for (auto& enemy : enemyList_) {
 		collisionManager_->push_back(enemy.get());
 	}
 
-	for (auto& enemy : enemyList_) {
-		for (auto& eBullet : enemy->GetBullet()) {
-			collisionManager_->push_back(eBullet.get());
-		}
+	for (auto& eBullet : enemyBulletList_) {
+		collisionManager_->push_back(eBullet.get());
 	}
 
 	collisionManager_->ChackAllCollision();
 
 #pragma endregion
 
+	enemySpawner_->Update();
+
 	player_->Update();
+	for (auto& playerBullet : playerBulletList_) {
+		playerBullet->Update();
+	}
 	for (auto& enemy : enemyList_) {
 		enemy->Update();
+	}
+	for (auto& enemyBullet : enemyBulletList_) {
+		enemyBullet->Update();
 	}
 
 #ifdef _DEBUG
@@ -145,6 +185,12 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	for (auto& enemy : enemyList_) {
 		enemy->Draw(viewProjection_);
+	}
+	for (auto& playerBullet : playerBulletList_) {
+		playerBullet->Draw(viewProjection_);
+	}
+	for (auto& enemyBullet : enemyBulletList_) {
+		enemyBullet->Draw(viewProjection_);
 	}
 	skyBox_->Draw(viewProjection_);
 

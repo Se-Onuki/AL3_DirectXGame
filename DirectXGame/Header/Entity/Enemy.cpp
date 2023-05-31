@@ -2,6 +2,7 @@
 #include "math/Math.hpp"
 #include <imgui.h>
 
+#include "GameScene.h"
 #include "Player.h"
 #include "math/Lerp.h"
 
@@ -16,7 +17,9 @@ void Enemy::ChangeState(EnemyState::Base* newState) {
 	state_->Enter();
 }
 
-void Enemy::OnCollision() {}
+void Enemy::SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
+void Enemy::OnCollision() { isDead_ = true; }
 
 void Enemy::Fire() {
 
@@ -29,7 +32,7 @@ void Enemy::Fire() {
 	newBullet->Init(model_, worldTransform_.translation_, velocity);
 	newBullet->SetPlayer(player_);
 
-	bullets_.emplace_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 void Enemy::FireAndInit() {
@@ -59,13 +62,6 @@ void Enemy::Init(Model* model, const uint32_t& textureHandle, const Vector3& pos
 }
 
 void Enemy::Update() {
-	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
-		if (bullet->IsDead()) {
-			bullet.reset();
-			return true;
-		}
-		return false;
-	});
 
 	fireTimerList_.remove_if([](std::unique_ptr<FunctionTimer>& fireTimer) {
 		if (fireTimer->IsFinish()) {
@@ -80,9 +76,9 @@ void Enemy::Update() {
 	}
 
 	state_->Update();
-	for (auto& bullet : bullets_) {
-		bullet->Update();
-	}
+	/*for (auto& bullet : bullets_) {
+	    bullet->Update();
+	}*/
 	worldTransform_.UpdateMatrix();
 	const Vector3& translation = worldTransform_.translation_;
 	ImGui::Begin("Enemy");
@@ -94,16 +90,16 @@ void Enemy::Update() {
 
 void Enemy::Draw(const ViewProjection& Vp) {
 	Entity::Draw(Vp);
-	for (auto& bullet : bullets_) {
-		bullet->Draw(Vp);
-	}
+	/*for (auto& bullet : bullets_) {
+	    bullet->Draw(Vp);
+	}*/
 }
 
 void EnemyState::Approach::Enter() { enemy_->SetFireTimer(); }
 
 void EnemyState::Approach::Update() {
 	// 移動
-	enemy_->AddPosition(Vector3{0.f, 0.f, -1.f}.Nomalize() * enemy_->DefaultSpeed);
+	enemy_->AddPosition(Vector3{0.f, 0.f, -0.f}.Nomalize() * enemy_->DefaultSpeed);
 	if (enemy_->GetWorldTransform().translation_.z <= 0.f) {
 		enemy_->ChangeState(new EnemyState::Leave());
 		return;
@@ -145,9 +141,9 @@ void EnemyBullet::Init(Model* model, const Vector3& position, const Vector3& vel
 }
 
 void EnemyBullet::Update() {
-	velocity_ =
-	    Slerp(velocity_, (player_->GetPosition() - worldTransform_.translation_), 0.025f).Nomalize() *
-	    kBulletSpeed;
+	velocity_ = Slerp(velocity_, (player_->GetPosition() - worldTransform_.translation_), 0.0125f)
+	                .Nomalize() *
+	            kBulletSpeed;
 	SetFacing();
 	Move();
 	if (--deathTimer_ <= 0) {

@@ -2,6 +2,8 @@
 #include "Entity.h"
 #include "Header/Timer/Timer.h"
 
+class GameScene;
+
 namespace EnemyState {
 class Base;
 }
@@ -11,17 +13,23 @@ class Player;
 class Enemy : public Entity {
 
 	EnemyState::Base* state_;
-	std::list<std::unique_ptr<EnemyBullet>> bullets_;
-	const uint16_t maxCooltime_ = 50;
+	const uint16_t maxCooltime_ = 60;
 	std::list<std::unique_ptr<FunctionTimer>> fireTimerList_;
 	const float kBulletSpeed = 0.5f;
 	Player* player_ = nullptr;
 
+	GameScene* gameScene_ = nullptr;
+	bool isDead_ = false;
+
+
 public:
+
+	void SetGameScene(GameScene* gameScene);
+
 	void SetPlayer(Player* player) { player_ = player; };
 	void OnCollision() override;
-	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() const { return bullets_; }
-
+	const bool& IsDead() const { return isDead_; }
+	
 	void Fire();
 	void FireAndInit();
 	void SetFireTimer();
@@ -69,7 +77,6 @@ class EnemyBullet : public Entity {
 	bool isDead_ = false;
 	Player* player_ = nullptr;
 	const float kBulletSpeed = 0.5f;
-
 public:
 	EnemyBullet() {}
 	void OnCollision() override;

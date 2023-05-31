@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <imgui.h>
 
+#include "GameScene.h"
 #include "PlayerBullet.h"
 #include "math/Math.hpp"
+
+void Player::SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 void Player::Init(Model* model, const uint32_t& textureHandle) {
 	Entity::Init(model, textureHandle);
@@ -16,14 +19,6 @@ void Player::Init(Model* model, const uint32_t& textureHandle) {
 void Player::OnCollision() {}
 
 void Player::Update() {
-
-	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
-		if (bullet->IsDead()) {
-			bullet.reset();
-			return true;
-		}
-		return false;
-	});
 
 #pragma region 旋回処理
 
@@ -86,9 +81,9 @@ void Player::Update() {
 
 #pragma endregion
 
-	for (auto& element : bullets_) {
-		element->Update();
-	}
+	// for (auto& element : bullets_) {
+	//	element->Update();
+	// }
 }
 
 void Player::Attack() {
@@ -100,15 +95,15 @@ void Player::Attack() {
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Init(model_, GetPosition(), velocity);
 
-		bullets_.emplace_back(newBullet);
+		gameScene_->AddPlayerBullet(newBullet);
 	}
 }
 
 void Player::Draw(const ViewProjection& Vp) {
 	Entity::Draw(Vp);
-	for (auto& element : bullets_) {
-		element->Draw(Vp);
-	}
+	/*for (auto& element : *bullets_) {
+	    element->Draw(Vp);
+	}*/
 }
 
 Player::Player() {}

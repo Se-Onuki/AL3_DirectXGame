@@ -114,9 +114,11 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Header\Entity\CollisionManager.cpp" />
     <ClCompile Include="Header\Entity\Enemy.cpp" />
+    <ClCompile Include="Header\Entity\EnemySpawner.cpp" />
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
     <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
+    <ClCompile Include="Header\File\File.cpp" />
     <ClCompile Include="Header\Object\Object.cpp" />
     <ClCompile Include="Header\Object\Rail.cpp" />
     <ClCompile Include="Header\Object\RailCamera.cpp" />
@@ -158,9 +160,11 @@
     <ClInclude Include="base\WinApp.h" />
     <ClInclude Include="Header\Entity\CollisionManager.h" />
     <ClInclude Include="Header\Entity\Enemy.h" />
+    <ClInclude Include="Header\Entity\EnemySpawner.h" />
     <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\Player.h" />
     <ClInclude Include="Header\Entity\PlayerBullet.h" />
+    <ClInclude Include="Header\File\File.hpp" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="Header\Object\Object.h" />
     <ClInclude Include="Header\Object\Rail.h" />
