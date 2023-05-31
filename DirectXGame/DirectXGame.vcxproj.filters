@@ -70,6 +70,9 @@
     <Filter Include="Header\File">
       <UniqueIdentifier>{17d35e27-e575-4ce8-804b-4478b465b3e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Render">
+      <UniqueIdentifier>{2bcf525b-a208-4288-8321-b0a093a8725e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -149,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Header\Entity\EnemySpawner.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Render\Render.cpp">
+      <Filter>Header\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="Header\Entity\EnemySpawner.h">
       <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Render\Render.hpp">
+      <Filter>Header\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

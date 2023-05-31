@@ -40,6 +40,12 @@ public:
 			return (worldTransform_.translation_ * worldTransform_.parent_->matWorld_);
 		return worldTransform_.translation_;
 	}
+
+	const Matrix4x4 GetMatWorld() const {
+		if (worldTransform_.parent_ != nullptr)
+			return (worldTransform_.matWorld_ * worldTransform_.parent_->matWorld_);
+		return worldTransform_.matWorld_;
+	}
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
 	virtual void OnCollision() = 0;

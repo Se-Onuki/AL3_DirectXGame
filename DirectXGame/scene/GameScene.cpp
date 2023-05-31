@@ -48,6 +48,8 @@ void GameScene::Initialize() {
 	railCamera_->Init(Vector3::zero(), Vector3::zero());
 	railCamera_->SetRail(rail_.get());
 
+	TextureManager::Load("target.png");
+
 	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
 	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");
 
@@ -127,7 +129,7 @@ void GameScene::Update() {
 
 	enemySpawner_->Update();
 
-	player_->Update();
+	player_->Update(viewProjection_);
 	for (auto& playerBullet : playerBulletList_) {
 		playerBullet->Update();
 	}
@@ -207,6 +209,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

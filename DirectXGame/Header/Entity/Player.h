@@ -3,6 +3,7 @@
 #include "input.h"
 
 class GameScene;
+class Sprite;
 
 class Player : public Entity {
 	Input* input_ = nullptr;
@@ -13,6 +14,10 @@ class Player : public Entity {
 
 	GameScene* gameScene_ = nullptr;
 
+	WorldTransform worldTransform3DReticle_;
+
+	Sprite* sprite2DReticle_ = nullptr;
+
 	void Attack();
 
 public:
@@ -22,8 +27,9 @@ public:
 
 	void OnCollision() override;
 
-	void Update() override;
+	void Update(const ViewProjection& Vp);
 	void Draw(const ViewProjection& Vp) override;
+	void DrawUI() const;
 
 	Player();
 	~Player();

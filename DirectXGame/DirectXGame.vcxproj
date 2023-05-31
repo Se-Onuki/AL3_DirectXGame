@@ -123,6 +123,7 @@
     <ClCompile Include="Header\Object\Rail.cpp" />
     <ClCompile Include="Header\Object\RailCamera.cpp" />
     <ClCompile Include="Header\Object\SkyBox.cpp" />
+    <ClCompile Include="Header\Render\Render.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Lerp.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Header\Object\Rail.h" />
     <ClInclude Include="Header\Object\RailCamera.h" />
     <ClInclude Include="Header\Object\SkyBox.h" />
+    <ClInclude Include="Header\Render\Render.hpp" />
     <ClInclude Include="Header\Timer\Timer.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Lerp.h" />
