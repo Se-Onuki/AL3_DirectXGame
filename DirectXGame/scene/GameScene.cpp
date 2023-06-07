@@ -7,7 +7,9 @@
 
 #include "Header/Entity/CollisionManager.h"
 #include "Header/Entity/PlayerBullet.h"
+#include "Header/Entity/Targeting.h"
 #include "Header/Object/Object.h"
+#include "Header/Render/Render.hpp"
 
 GameScene::GameScene() {}
 
@@ -58,6 +60,8 @@ void GameScene::Initialize() {
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->AddPosition({0, 0, 50.f});
 	player_->SetGameScene(this);
+
+	targeting_ = Targeting::GetInstance();
 
 	collisionManager_ = CollisionManager::GetInstance();
 
@@ -124,6 +128,16 @@ void GameScene::Update() {
 	}
 
 	collisionManager_->ChackAllCollision();
+
+#pragma endregion
+
+#pragma region Target
+
+	targeting_->clear();
+	for (auto& enemy : enemyList_) {
+		targeting_->push_back(enemy.get());
+	}
+	targeting_->Update();
 
 #pragma endregion
 

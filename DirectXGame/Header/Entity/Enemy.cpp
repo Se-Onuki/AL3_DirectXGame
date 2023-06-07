@@ -19,7 +19,7 @@ void Enemy::ChangeState(EnemyState::Base* newState) {
 
 void Enemy::SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
-void Enemy::OnCollision() { isDead_ = true; }
+void Enemy::OnCollision(const Collider* const) { isDead_ = true; }
 
 void Enemy::Fire() {
 
@@ -119,7 +119,7 @@ void EnemyState::Leave::Update() {
 
 void EnemyState::Leave::Exit() {}
 
-void EnemyBullet::OnCollision() { isDead_ = true; }
+void EnemyBullet::OnCollision(const Collider* const) { isDead_ = true; }
 
 void EnemyBullet::SetPlayer(Player* player) { player_ = player; }
 

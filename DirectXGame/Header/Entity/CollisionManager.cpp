@@ -23,7 +23,7 @@ void CollisionManager::CheckCollisionPair(Collider* A, Collider* B) {
 	    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0u)
 		return;
 	if ((A->GetPosition() - B->GetPosition()).Length() <= A->GetRadius() + B->GetRadius()) {
-		A->OnCollision();
-		B->OnCollision();
+		A->OnCollision(B);
+		B->OnCollision(A);
 	}
 }

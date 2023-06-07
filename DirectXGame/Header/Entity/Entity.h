@@ -48,7 +48,7 @@ public:
 	}
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
-	virtual void OnCollision() = 0;
+	virtual void OnCollision(const Collider* const other) = 0;
 };
 
 class Entity : public Collider {

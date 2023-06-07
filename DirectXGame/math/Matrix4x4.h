@@ -3,7 +3,7 @@
 struct Vector3;
 
 struct Matrix4x4 {
-	enum EulerAngle {
+	enum class EulerAngle {
 		Pitch, // x軸
 		Yaw,   // y軸
 		Roll   // z軸
@@ -29,15 +29,15 @@ struct Matrix4x4 {
 
 	float m[4][4];
 
-	//void Printf(const int& x, const int& y) const;
+	// void Printf(const int& x, const int& y) const;
 
 	/// @brief 逆行列関数
 	/// @return 逆行列
-	Matrix4x4 Inverse();
+	Matrix4x4 Inverse() const;
 
 	/// @brief 転置行列関数
 	/// @return 転置行列
-	Matrix4x4 Transpose();
+	Matrix4x4 Transpose() const;
 
 	Matrix4x4 operator+(const Matrix4x4& Second) const;
 

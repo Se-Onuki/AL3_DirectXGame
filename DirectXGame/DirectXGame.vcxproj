@@ -118,6 +118,7 @@
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
     <ClCompile Include="Header\Entity\PlayerBullet.cpp" />
+    <ClCompile Include="Header\Entity\Targeting.cpp" />
     <ClCompile Include="Header\File\File.cpp" />
     <ClCompile Include="Header\Object\Object.cpp" />
     <ClCompile Include="Header\Object\Rail.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\Player.h" />
     <ClInclude Include="Header\Entity\PlayerBullet.h" />
+    <ClInclude Include="Header\Entity\Targeting.h" />
     <ClInclude Include="Header\File\File.hpp" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="Header\Object\Object.h" />

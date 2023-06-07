@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "GameScene.h"
+#include "Header/Entity/Targeting.h"
 #include "Header/Render/Render.hpp"
 #include "PlayerBullet.h"
 #include "Sprite.h"
@@ -20,9 +21,11 @@ void Player::Init(Model* model, const uint32_t& textureHandle) {
 	worldTransform3DReticle_.Initialize();
 	uint32_t textureReticle = TextureManager::Load("target.png");
 	sprite2DReticle_ = Sprite::Create(textureReticle, {0, 0}, {1, 1, 1, 1}, {0.5f, 0.5f});
+
+	targeting_ = Targeting::GetInstance();
 }
 
-void Player::OnCollision() {}
+void Player::OnCollision(const Collider* const) {}
 
 void Player::Update(const ViewProjection& Vp) {
 
@@ -96,37 +99,32 @@ void Player::Update(const ViewProjection& Vp) {
 	sprite2DReticle_->SetPosition(
 	    {static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)});
 
-	// Vector3 positionReticle = worldTransform3DReticle_.translation_;
-	// Matrix4x4 matViewport =
-	//     Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-	// Matrix4x4 matViewProjectionViewport = Vp.matView * Vp.matProjection * matViewport;
-	// positionReticle = positionReticle * matViewProjectionViewport;
-	// sprite2DReticle_->SetPosition({positionReticle.x, positionReticle.y});
-
 #pragma endregion
 
 #pragma region 2D->3D
 
 	Matrix4x4 matViewport =
 	    Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-	Matrix4x4 matVPV = Vp.matView * Vp.matProjection * matViewport;
-	Matrix4x4 matInvarseVPV = matVPV.Inverse();
+	Matrix4x4 matVPVp = Vp.matView * Vp.matProjection * matViewport;
 
-	Vector3 posNear{static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y), 0.f};
-	Vector3 posFar{static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y), 1.f};
-
-	posNear = posNear * matInvarseVPV;
-	posFar = posFar * matInvarseVPV;
+	Segment worldSegment = Render::ScreenToWorld(
+	    {static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)}, matVPVp);
 
 #pragma endregion
 
+	targeting_->SetSegment(worldSegment);
+	enemyTarget_ = targeting_->GetHitCollider();
+	if (enemyTarget_) {
+		sprite2DReticle_->SetColor({1.f, 0.f, 0.f, 1.f});
+	} else {
+		sprite2DReticle_->SetColor({1.f, 1.f, 1.f, 1.f});
+	}
+
 #pragma region segment->Vector3
 
-	Vector3 mouseDirection = posFar - posNear;
-	mouseDirection = mouseDirection.Nomalize();
 	const float kDistanceTestObject = 100.f;
-	worldTransform3DReticle_.translation_ =
-	    mouseDirection.Nomalize() * kDistanceTestObject + posNear;
+	worldSegment.diff = worldSegment.diff.Nomalize() * kDistanceTestObject;
+	worldTransform3DReticle_.translation_ = worldSegment.GetEnd();
 	worldTransform3DReticle_.UpdateMatrix();
 
 #pragma endregion
@@ -149,8 +147,12 @@ void Player::Update(const ViewProjection& Vp) {
 	ImGui::Text(
 	    "2DReticle:( %.2f, %.2f)", sprite2DReticle_->GetPosition().x,
 	    sprite2DReticle_->GetPosition().y);
-	ImGui::Text("Near:( %+.2f, %+.2f, %+.2f)", posNear.x, posNear.y, posNear.z);
-	ImGui::Text("Far:( %+.2f, %+.2f, %+.2f)", posFar.x, posFar.y, posFar.z);
+	ImGui::Text(
+	    "origin:( %+.2f, %+.2f, %+.2f)", worldSegment.origin.x, worldSegment.origin.y,
+	    worldSegment.origin.z);
+	ImGui::Text(
+	    "diff:( %+.2f, %+.2f, %+.2f)", worldSegment.diff.x, worldSegment.diff.y,
+	    worldSegment.diff.z);
 	ImGui::Text(
 	    "3DReticle:( %+.2f, %+.2f, %+.2f)", worldTransform3DReticle_.translation_.x,
 	    worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
@@ -170,11 +172,26 @@ void Player::Attack() {
 
 		gameScene_->AddPlayerBullet(newBullet);
 	}
+
+	if (input_->IsTriggerMouse(1)) {
+		if (!enemyTarget_)
+			return;
+		Vector3 velocity = worldTransform3DReticle_.translation_ - GetPosition();
+		velocity = velocity.Nomalize() * kBulletSpeed;
+		velocity =
+		    velocity * Matrix4x4::EulerRotate(Matrix4x4::EulerAngle::Yaw, 90 * Angle::Dig2Rad);
+
+		HomingPlayerBullet* newBullet = new HomingPlayerBullet();
+		newBullet->Init(model_, GetPosition(), velocity);
+		newBullet->SetTarget(enemyTarget_);
+
+		gameScene_->AddPlayerBullet(newBullet);
+	}
 }
 
 void Player::Draw(const ViewProjection& Vp) {
 	Entity::Draw(Vp);
-	model_->Draw(worldTransform3DReticle_, Vp, textureHandle_);
+	// model_->Draw(worldTransform3DReticle_, Vp, textureHandle_);
 	/*for (auto& element : *bullets_) {
 	    element->Draw(Vp);
 	}*/

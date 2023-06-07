@@ -19,6 +19,7 @@
 #include "Header/Object/SkyBox.h"
 
 class CollisionManager;
+class Targeting;
 
 /// <summary>
 /// ゲームシーン
@@ -77,6 +78,7 @@ private: // メンバ変数
 	std::list<std::unique_ptr<EnemyBullet>> enemyBulletList_;
 
 	CollisionManager* collisionManager_ = nullptr;
+	Targeting* targeting_ = nullptr;
 
 	std::unique_ptr<EnemySpawner> enemySpawner_ = nullptr;
 

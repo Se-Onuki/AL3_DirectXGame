@@ -76,3 +76,22 @@ Matrix4x4 Render::MakeViewportMatrix(
 	    minDepth,
 	    1};
 }
+
+Segment Render::ScreenToWorld(const Vector2& screenPos, const Matrix4x4& matVPVp) {
+	Matrix4x4 matInvarseVPVp = matVPVp.Inverse();
+
+	Vector3 posNear{screenPos.x, screenPos.y, 0.f};
+	Vector3 posFar{screenPos.x, screenPos.y, 1.f};
+
+	posNear = posNear * matInvarseVPVp;
+	posFar = posFar * matInvarseVPVp;
+
+	Segment segment;
+	segment.origin = posNear;
+	segment.diff = posFar - posNear;
+	return segment;
+}
+
+Vector3 Render::WorldToScreen(const Vector3& worldPos, const Matrix4x4& matVPVp) {
+	return worldPos * matVPVp;
+}

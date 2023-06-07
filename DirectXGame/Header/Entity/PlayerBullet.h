@@ -7,13 +7,30 @@ class PlayerBullet : public Entity {
 	int32_t deathTimer_ = kLifeTime;
 	bool isDead_ = false;
 
+protected:
+	const float kBulletSpeed = 0.75f;
+
 public:
 	PlayerBullet();
-	~PlayerBullet();
-	void OnCollision() override;
+	virtual ~PlayerBullet();
+	virtual void OnCollision(const Collider* const other) override;
 
 	void Init(Model* model, const Vector3& position, const Vector3& velocity);
-	void Update() override;
+	virtual void Update() override;
 
 	const bool& IsDead() const { return isDead_; }
+
+	void SetFacing();
+};
+
+class Enemy;
+class HomingPlayerBullet : public PlayerBullet {
+	using PlayerBullet::PlayerBullet;
+	static std::list<Collider*> targetList_;
+	Collider* target_ = nullptr;
+
+public:
+	void OnCollision(const Collider* const other) override;
+	void Update() override;
+	void SetTarget(Collider* const enemy);
 };

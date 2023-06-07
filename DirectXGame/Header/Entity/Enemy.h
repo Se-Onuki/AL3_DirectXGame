@@ -27,7 +27,7 @@ public:
 	void SetGameScene(GameScene* gameScene);
 
 	void SetPlayer(Player* player) { player_ = player; };
-	void OnCollision() override;
+	void OnCollision(const Collider* const other) override;
 	const bool& IsDead() const { return isDead_; }
 	
 	void Fire();
@@ -79,7 +79,7 @@ class EnemyBullet : public Entity {
 	const float kBulletSpeed = 0.5f;
 public:
 	EnemyBullet() {}
-	void OnCollision() override;
+	void OnCollision(const Collider* const other) override;
 	virtual ~EnemyBullet() {}
 	void SetPlayer(Player* player);
 

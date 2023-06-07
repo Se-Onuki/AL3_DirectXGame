@@ -134,6 +134,6 @@ Matrix3x3 MakeViewportMatrix(const Vector2& LeftTop, const Vector2& RightBottom)
 	    1};
 }
 
-float Angle::Digree::ToRadian() { return digree * static_cast<float>(std::numbers::pi) / 180.f; }
+float Angle::Digree::ToRadian() { return digree * Dig2Rad; }
 
-float Angle::Radian::ToDigree() { return radian * 180.f / static_cast<float>(std::numbers::pi); }
+float Angle::Radian::ToDigree() { return radian * Rad2Dig; }

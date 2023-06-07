@@ -41,4 +41,6 @@ public:
 	    const float& Left, const float& Top, const float& width, const float& height,
 	    const float& minDepth, const float& maxDepth);
 
+	static Segment ScreenToWorld(const Vector2& screenPos, const Matrix4x4& matVPVp);
+	static Vector3 WorldToScreen(const Vector3& worldPos, const Matrix4x4& matVPVp);
 };

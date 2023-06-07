@@ -1,11 +1,11 @@
 #include "Matrix4x4.h"
 
-#include "Vector3.h"
 #include "Matrix2x2.h"
+#include "Vector3.h"
 
 #include <cmath>
 
-Matrix4x4 Matrix4x4::Inverse() {
+Matrix4x4 Matrix4x4::Inverse() const {
 	Matrix4x4 calc = *this;
 	Matrix4x4 out = Identity();
 
@@ -47,7 +47,7 @@ Matrix4x4 Matrix4x4::Inverse() {
 	        this->m[0][2] * this->m[1][1] * this->m[2][0]);*/
 }
 
-Matrix4x4 Matrix4x4::Transpose() {
+Matrix4x4 Matrix4x4::Transpose() const {
 	return Matrix4x4{
 	    this->m[0][0], this->m[1][0], this->m[2][0], this->m[3][0], this->m[0][1], this->m[1][1],
 	    this->m[2][1], this->m[3][1], this->m[0][2], this->m[1][2], this->m[2][2], this->m[3][2],
@@ -84,7 +84,7 @@ Matrix4x4 Matrix4x4::Affine(const Vector3& scale, const Vector3& rotate, const V
 
 Matrix4x4 Matrix4x4::EulerRotate(EulerAngle eulerAngle, float angle) {
 	switch (eulerAngle) {
-	case Matrix4x4::Pitch:
+	case EulerAngle::Pitch:
 		return Matrix4x4{1,
 		                 0,
 		                 0,
@@ -102,11 +102,11 @@ Matrix4x4 Matrix4x4::EulerRotate(EulerAngle eulerAngle, float angle) {
 		                 0,
 		                 1};
 		break;
-	case Matrix4x4::Yaw:
+	case EulerAngle::Yaw:
 		return Matrix4x4{std::cos(angle), 0, -std::sin(angle), 0, 0, 1, 0, 0,
 		                 std::sin(angle), 0, std::cos(angle),  0, 0, 0, 0, 1};
 		break;
-	case Matrix4x4::Roll:
+	case EulerAngle::Roll:
 		return Matrix4x4{
 		    std::cos(angle),
 		    std::sin(angle),
