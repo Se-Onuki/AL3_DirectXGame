@@ -180,6 +180,9 @@ void Player::Attack() {
 		velocity = velocity.Nomalize() * kBulletSpeed;
 		velocity =
 		    velocity * Matrix4x4::EulerRotate(Matrix4x4::EulerAngle::Yaw, 90 * Angle::Dig2Rad);
+		velocity = velocity * Matrix4x4::EulerRotate(
+		                          Matrix4x4::EulerAngle::Roll,
+		                          Random::Int<int32_t>(-90, 90) * Angle::Dig2Rad);
 
 		HomingPlayerBullet* newBullet = new HomingPlayerBullet();
 		newBullet->Init(model_, GetPosition(), velocity);

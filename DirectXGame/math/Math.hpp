@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <numbers>
+#include <random>
 
 #include "Matrix2x2.h"
 #include "Matrix3x3.h"
@@ -129,3 +130,20 @@ const float Rad2Dig = 180.f / static_cast<float>(std::numbers::pi);
 // enum class
 
 } // namespace Angle
+
+namespace Random {
+template<typename T> T Int(const T& min, const T& max) {
+	static std::mt19937 mt{std::random_device{}()};
+
+	static std::uniform_int_distribution<T> dist(min, max);
+
+	return dist(mt);
+}
+template<typename T> T Real(const T& min, const T& max) {
+	static std::mt19937 mt{std::random_device{}()};
+
+	static std::uniform_real_distribution<T> dist(min, max);
+
+	return dist(mt);
+}
+} // namespace Random
