@@ -58,7 +58,7 @@ void GameScene::Initialize() {
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
 	player_->SetParent(&railCamera_->GetWorldTransform());
-	player_->AddPosition({0, 0, 50.f});
+	player_->AddPosition({0, 0, 30.f});
 	player_->SetGameScene(this);
 
 	targeting_ = Targeting::GetInstance();
@@ -135,6 +135,8 @@ void GameScene::Update() {
 
 	targeting_->clear();
 	for (auto& enemy : enemyList_) {
+		if (enemy->IsDead())
+			continue;
 		targeting_->push_back(enemy.get());
 	}
 	targeting_->Update();

@@ -8,7 +8,7 @@ class Targeting;
 
 class Player : public Entity {
 	Input* input_ = nullptr;
-	Vector2 MovementLimit = {34.5f, 18.5f};
+	Vector2 MovementLimit = {20.f, 10.5f};
 	const float MoveSpeed = 0.2f;
 	const float kRotSpeed = 0.02f;
 	const float kBulletSpeed = 0.5f;

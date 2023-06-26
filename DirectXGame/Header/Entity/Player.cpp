@@ -103,7 +103,7 @@ void Player::Update(const ViewProjection& Vp) {
 
 #pragma region 2D->3D
 
-	Matrix4x4 matViewport =
+	const static Matrix4x4 matViewport =
 	    Render::MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 	Matrix4x4 matVPVp = Vp.matView * Vp.matProjection * matViewport;
 
@@ -122,7 +122,7 @@ void Player::Update(const ViewProjection& Vp) {
 
 #pragma region segment->Vector3
 
-	const float kDistanceTestObject = 100.f;
+	const float kDistanceTestObject = 150.f;
 	worldSegment.diff = worldSegment.diff.Nomalize() * kDistanceTestObject;
 	worldTransform3DReticle_.translation_ = worldSegment.GetEnd();
 	worldTransform3DReticle_.UpdateMatrix();
@@ -182,7 +182,7 @@ void Player::Attack() {
 		    velocity * Matrix4x4::EulerRotate(Matrix4x4::EulerAngle::Yaw, 90 * Angle::Dig2Rad);
 		velocity = velocity * Matrix4x4::EulerRotate(
 		                          Matrix4x4::EulerAngle::Roll,
-		                          Random::Int<int32_t>(-90, 90) * Angle::Dig2Rad);
+		                          Random::Int<int32_t>(-180, 180) * Angle::Dig2Rad);
 
 		HomingPlayerBullet* newBullet = new HomingPlayerBullet();
 		newBullet->Init(model_, GetPosition(), velocity);
