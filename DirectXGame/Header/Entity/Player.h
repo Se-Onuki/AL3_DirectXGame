@@ -6,14 +6,7 @@ class PlayerBullet;
 
 class Player : public Entity {
 	Input* input_ = nullptr;
-	Vector2 MovementLimit = {34.5f, 18.5f};
-	const float MoveSpeed = 0.2f;
-	const float kRotSpeed = 0.02f;
-	const float kBulletSpeed = 0.5f;
 
-	std::list<PlayerBullet*> bullets_;
-
-	void Attack();
 
 public:
 	void Init(Model* model, const uint32_t& textureHandle) override;

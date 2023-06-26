@@ -19,14 +19,14 @@ public:
 	/// @brief モデルの追加
 	/// @param key 文字列キー
 	/// @param model モデルデータ
-	void AddModel(const std::string& key, Model* model) {
+	Model* const AddModel(const std::string& key, Model* model) {
 		ModelHash hash = std::hash<std::string>{}(key);
-		models_[hash] = model;
+		return models_[hash] = model;
 	}
 	/// @brief モデルの追加
 	/// @param hash 文字列ハッシュ値
 	/// @param model モデルデータ
-	void AddModel(const ModelHash& hash, Model* model) { models_[hash] = model; }
+	Model* const AddModel(const ModelHash& hash, Model* model) { return models_[hash] = model; }
 
 	/// @brief モデルデータの取得
 	/// @param key 文字列キー
@@ -61,7 +61,6 @@ public:
 		}
 		models_.clear();
 	}
-
 
 private:
 	ModelManager() {}
@@ -133,4 +132,3 @@ private:
 	// スプライトマップ
 	std::unordered_map<SpriteHash, Sprite*> sprites_;
 };
-

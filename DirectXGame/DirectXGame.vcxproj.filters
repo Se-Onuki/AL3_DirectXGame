@@ -108,17 +108,11 @@
     <ClCompile Include="Header\Entity\Player.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Entity\PlayerBullet.cpp">
-      <Filter>Header\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="3d\WorldTransform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Header\Timer\Timer.cpp">
       <Filter>Header\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="Header\Entity\Enemy.cpp">
-      <Filter>Header\Entity</Filter>
     </ClCompile>
     <ClCompile Include="math\Lerp.cpp">
       <Filter>ソース ファイル</Filter>
@@ -228,12 +222,6 @@
       <Filter>Header\ModelManager</Filter>
     </ClInclude>
     <ClInclude Include="Header\Entity\Player.h">
-      <Filter>Header\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\Entity\PlayerBullet.h">
-      <Filter>Header\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Header\Entity\Enemy.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Header\Timer\Timer.h">
