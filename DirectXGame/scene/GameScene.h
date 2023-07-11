@@ -12,6 +12,8 @@
 #include "DebugCamera.h"
 #include "Header/Entity/Player.h"
 
+class Ground;
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -52,6 +54,7 @@ private: // メンバ変数
 
 	bool isDebugCameraActive_ = false;
 	std::unique_ptr<DebugCamera> debugCamera_ = nullptr;
+	std::unique_ptr<Ground> ground_ = nullptr;
 
 	std::unique_ptr<Player> player_ = nullptr;
 

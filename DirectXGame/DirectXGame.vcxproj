@@ -114,6 +114,7 @@
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
+    <ClCompile Include="Header\Object\Ground.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math\Lerp.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\Player.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
+    <ClInclude Include="Header\Object\Ground.h" />
     <ClInclude Include="Header\Timer\Timer.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Lerp.h" />

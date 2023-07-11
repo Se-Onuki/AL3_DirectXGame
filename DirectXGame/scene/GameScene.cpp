@@ -5,6 +5,8 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "Header/Object/Ground.h"
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {}
@@ -16,10 +18,15 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
+	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
+
 	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");
 
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
+
+	ground_.reset(new Ground);
+	ground_->Init();
 
 	viewProjection_.Initialize();
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
@@ -74,6 +81,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewProjection_);
+	ground_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
