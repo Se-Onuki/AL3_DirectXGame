@@ -22,7 +22,7 @@ public:
 	virtual ~Entity() {}
 
 	virtual void Draw(const ViewProjection& Vp) {
-		model_->Draw(worldTransform_, Vp, textureHandle_);
+		model_->Draw(worldTransform_, Vp/*, textureHandle_*/);
 	}
 
 	// virtual void Init(const std::string& modelKey, const uint32_t& textureHandle);

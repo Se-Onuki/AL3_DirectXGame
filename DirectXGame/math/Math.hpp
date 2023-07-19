@@ -123,6 +123,9 @@ struct Radian {
 	float ToDigree();
 };
 
-//enum class 
+const float PI = static_cast<float>(std::numbers::pi);
+
+const float Dig2Rad = PI / 180.f;
+const float Rad2Dig = 180.f / PI;
 
 } // namespace Angle

@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 #include "Header/Object/Ground.h"
+#include <Math.hpp>
 
 GameScene::GameScene() {}
 
@@ -17,10 +18,10 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	ModelManager::GetInstance()->AddModel("playerModel", Model::Create());
+	ModelManager::GetInstance()->AddModel("playerModel", Model::CreateFromOBJ("player"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
-	Model* playerModel = ModelManager::GetInstance()->GetModel("playerModel");
+	Model* const playerModel = ModelManager::GetInstance()->GetModel("playerModel");
 
 	player_.reset(new Player());
 	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
@@ -29,6 +30,8 @@ void GameScene::Initialize() {
 	ground_->Init();
 
 	viewProjection_.Initialize();
+	viewProjection_.rotation_.x += 10.f * Angle::Dig2Rad;
+	viewProjection_.translation_.y += 10.f;
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 	debugCamera_.reset(new DebugCamera(1280, 720));
 	AxisIndicator::GetInstance()->SetVisible(true);
