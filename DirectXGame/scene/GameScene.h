@@ -13,6 +13,7 @@
 #include "Header/Entity/Player.h"
 
 class Ground;
+class FollowCamera;
 
 /// <summary>
 /// ゲームシーン
@@ -57,6 +58,7 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_ = nullptr;
 
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

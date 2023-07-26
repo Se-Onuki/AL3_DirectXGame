@@ -5,6 +5,7 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "Header/Entity/FollowCamera.h"
 #include "Header/Object/Ground.h"
 #include <Math.hpp>
 
@@ -29,6 +30,11 @@ void GameScene::Initialize() {
 	ground_.reset(new Ground);
 	ground_->Init();
 
+	followCamera_.reset(new FollowCamera);
+	followCamera_->Init();
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+	player_->SetViewProjection(followCamera_->GetViewProjection());
+
 	viewProjection_.Initialize();
 	viewProjection_.rotation_.x += 10.f * Angle::Dig2Rad;
 	viewProjection_.translation_.y += 10.f;
@@ -40,9 +46,12 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	player_->Update();
+	followCamera_->Update();
 
-	
-	viewProjection_.UpdateMatrix();
+	viewProjection_.matView = followCamera_->GetViewMatrix();
+	viewProjection_.matProjection = followCamera_->GetProjectionMatrix();
+
+	viewProjection_.TransferMatrix();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_0)) {
 		isDebugCameraActive_ = !isDebugCameraActive_;

@@ -99,6 +99,25 @@ struct Vector3 {
 
 	_NODISCARD inline static Vector3 zero() { return Vector3{0, 0, 0}; }
 
+	static Vector3 up() { return Vector3{0, 1, 0}; }
+	static Vector3 down() { return Vector3{0, -1, 0}; }
+
+	static Vector3 front() { return Vector3{0, 0, 1}; }
+	static Vector3 back() { return Vector3{0, 0, -1}; }
+
+	static Vector3 right() { return Vector3{1, 0, 0}; }
+	static Vector3 left() { return Vector3{-1, 0, 0}; }
+
+	static Vector3 one() { return Vector3{1.f, 1.f, 1.f}; }
+
+	Vector3 Direction2Euler() const {
+		// return Vector3{std::atan2(-y, sqrt(x * x + z * z)), std::atan2(x, z), 0};
+		Vector3 out = zero();
+		out.y = std::atan2(x, z);
+		out.x = std::atan2(-y, std::sqrt(std::powf(x, 2) + std::powf(z, 2)));
+		return out;
+	}
+
 	_NODISCARD inline Vector3 Reflect(Vector3 normal) const {
 		return (*this) - normal * 2 * ((*this) * normal);
 
