@@ -2,10 +2,12 @@
 #include "AxisIndicator.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
+#include "WorldTransform.h"
 #include <cassert>
 #include <imgui.h>
 
 #include "Header/Entity/FollowCamera.h"
+#include "Header/ModelManager/ModelManager.h"
 #include "Header/Object/Ground.h"
 #include <Math.hpp>
 
@@ -19,13 +21,14 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	ModelManager::GetInstance()->AddModel("playerModel", Model::CreateFromOBJ("player"));
+	Model* const playerBody =
+	    ModelManager::GetInstance()->AddModel("playerBody", Model::CreateFromOBJ("body"));
+	// Model* const playerHead =
+	ModelManager::GetInstance()->AddModel("playerHead", Model::CreateFromOBJ("head"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
-	Model* const playerModel = ModelManager::GetInstance()->GetModel("playerModel");
-
 	player_.reset(new Player());
-	player_->Init(playerModel, TextureManager::Load("uvChecker.png"));
+	player_->Init(playerBody, TextureManager::Load("uvChecker.png"));
 
 	ground_.reset(new Ground);
 	ground_->Init();

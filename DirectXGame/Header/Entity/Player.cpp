@@ -3,10 +3,14 @@
 #include <algorithm>
 #include <imgui.h>
 
+#include "ViewProjection.h"
 #include "math/Math.hpp"
 
-void Player::Init(Model* model, const uint32_t& textureHandle) {
-	Entity::Init(model, textureHandle);
+void Player::Init(Model* const modelBody, const uint32_t& textureHandle) {
+	worldTransform_.Initialize();
+	modelBody_ = modelBody;
+	textureHandle_ = textureHandle;
+
 	input_ = Input::GetInstance();
 }
 
@@ -33,7 +37,7 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
-void Player::Draw(const ViewProjection& Vp) { Entity::Draw(Vp); }
+void Player::Draw(const ViewProjection& Vp) const { modelBody_->Draw(worldTransform_, Vp); }
 
 Player::Player() { input_ = Input::GetInstance(); }
 

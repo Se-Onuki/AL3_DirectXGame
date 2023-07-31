@@ -31,18 +31,18 @@ public:
 	/// @brief モデルデータの取得
 	/// @param key 文字列キー
 	/// @return モデルデータ
-	Model* GetModel(const std::string& key) {
+	Model* const GetModel(const std::string& key) {
 		ModelHash hash = std::hash<std::string>{}(key);
 		return models_[hash];
 	}
 	/// @brief モデルデータの取得
 	/// @param hash 文字列ハッシュ値
 	/// @return モデルデータ
-	Model* GetModel(const ModelHash& hash) { return models_[hash]; }
+	Model* const GetModel(const ModelHash& hash) { return models_[hash]; }
 
 	/// @brief モデルデータの破棄
 	/// @param key 文字列キー
-	void removeModel(const std::string& key) {
+	void RemoveModel(const std::string& key) {
 		ModelHash hash = std::hash<std::string>{}(key);
 		RemoveModel(hash);
 	}
