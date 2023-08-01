@@ -117,8 +117,11 @@
     <ClCompile Include="Header\Object\Ground.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Header\Entity\BaseCharacter.cpp">
+      <Filter>Header\Entity</Filter>
+    </ClCompile>
     <ClCompile Include="Header\Entity\FollowCamera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Header\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +237,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Header\Entity\FollowCamera.h">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Entity\BaseCharacter.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
   </ItemGroup>
