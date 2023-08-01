@@ -10,7 +10,7 @@ void FollowCamera::Init() {
 void FollowCamera::Update() {
 	if (target_) {
 		XINPUT_STATE inputState;
-		Vector3 offset{0.f, 2.f, -10.f};
+		Vector3 offset{0.f, 3.f, -15.f};
 
 		if (input_->GetJoystickState(0, inputState)) {
 			const float rotateStick = inputState.Gamepad.sThumbRX / 32767.f;

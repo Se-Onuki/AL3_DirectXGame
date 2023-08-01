@@ -30,16 +30,19 @@ void GameScene::Initialize() {
 	    ModelManager::GetInstance()->AddModel("playerLeft", Model::CreateFromOBJ("left"));
 	Model* const playerRight =
 	    ModelManager::GetInstance()->AddModel("playerRight", Model::CreateFromOBJ("right"));
+	Model* const playerWeapon =
+	    ModelManager::GetInstance()->AddModel("playerWeapon", Model::CreateFromOBJ("hammer"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
 	Model* const enemyBody =
 	    ModelManager::GetInstance()->AddModel("enemyBody", Model::CreateFromOBJ("needle_Body"));
 
 	std::unordered_map<std::string, Model*> playerMap_{
-	    {"body",  playerBody },
-	    {"head",  playerHead },
-	    {"right", playerRight},
-	    {"left",  playerLeft },
+	    {"body",   playerBody  },
+        {"head",   playerHead  },
+        {"right",  playerRight },
+	    {"left",   playerLeft  },
+        {"weapon", playerWeapon},
 	};
 
 	player_.reset(new Player());

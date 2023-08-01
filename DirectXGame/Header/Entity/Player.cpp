@@ -34,32 +34,7 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformLeft_.rotation_.x = std::sin(floatingParameter_) * swayHand_Dig * Angle::Dig2Rad;
 }
 
-void Player::Init(const std::unordered_map<std::string, Model*>& model) {
-
-	BaseCharacter::Init(model);
-
-	// メモリ確保
-	worldTransformBody_.Initialize();
-	worldTransformHead_.Initialize();
-	worldTransformLeft_.Initialize();
-	worldTransformRight_.Initialize();
-
-	// 親子関係
-	worldTransformBody_.parent_ = &transformOrigin_;
-
-	worldTransformHead_.parent_ = &worldTransformBody_;
-	worldTransformLeft_.parent_ = &worldTransformBody_;
-	worldTransformRight_.parent_ = &worldTransformBody_;
-
-	worldTransformHead_.translation_ = {0.f, 2.1f, 0.f};
-	worldTransformRight_.translation_ = {+0.75f, 1.5f, 0.f};
-	worldTransformLeft_.translation_ = {-0.75f, 1.5f, 0.f};
-
-	input_ = Input::GetInstance();
-	InitFloatingGimmick();
-}
-
-void Player::Update() {
+void Player::BehaviorRootUpdates() {
 
 	XINPUT_STATE inputState{};
 	if (input_->GetJoystickState(0, inputState)) {
@@ -87,7 +62,40 @@ void Player::Update() {
 	worldTransformHead_.UpdateMatrix();
 	worldTransformRight_.UpdateMatrix();
 	worldTransformLeft_.UpdateMatrix();
+
+	worldTransformWeapon_.UpdateMatrix();
 }
+
+void Player::Init(const std::unordered_map<std::string, Model*>& model) {
+
+	BaseCharacter::Init(model);
+
+	// メモリ確保
+	worldTransformBody_.Initialize();
+	worldTransformHead_.Initialize();
+	worldTransformLeft_.Initialize();
+	worldTransformRight_.Initialize();
+
+	worldTransformWeapon_.Initialize();
+
+	// 親子関係
+	worldTransformBody_.parent_ = &transformOrigin_;
+
+	worldTransformHead_.parent_ = &worldTransformBody_;
+	worldTransformLeft_.parent_ = &worldTransformBody_;
+	worldTransformRight_.parent_ = &worldTransformBody_;
+
+	worldTransformWeapon_.parent_ = &worldTransformBody_;
+
+	worldTransformHead_.translation_ = {0.f, 2.1f, 0.f};
+	worldTransformRight_.translation_ = {+0.75f, 1.5f, 0.f};
+	worldTransformLeft_.translation_ = {-0.75f, 1.5f, 0.f};
+
+	input_ = Input::GetInstance();
+	InitFloatingGimmick();
+}
+
+void Player::Update() { BehaviorRootUpdates(); }
 
 void Player::Draw(const ViewProjection& Vp) const {
 	modelMap_.at("body")->Draw(worldTransformBody_, Vp);

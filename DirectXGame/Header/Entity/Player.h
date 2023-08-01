@@ -17,6 +17,8 @@ class Player : public BaseCharacter {
 	WorldTransform worldTransformLeft_;
 	WorldTransform worldTransformRight_;
 
+	WorldTransform worldTransformWeapon_;
+
 	Input* input_ = nullptr;
 	const ViewProjection* viewProjection_ = nullptr;
 
@@ -26,6 +28,8 @@ class Player : public BaseCharacter {
 	const float originPos = 0.5f;
 	void InitFloatingGimmick();
 	void UpdateFloatingGimmick();
+
+	void BehaviorRootUpdates();
 
 public:
 	void Init(const std::unordered_map<std::string, Model*>& model) override;
