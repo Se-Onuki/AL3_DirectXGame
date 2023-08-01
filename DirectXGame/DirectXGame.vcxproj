@@ -112,7 +112,6 @@
     <ClCompile Include="3d\WorldTransform.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="Header\Entity\Entity.cpp" />
     <ClCompile Include="Header\Entity\FollowCamera.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
     <ClCompile Include="Header\Object\Ground.cpp" />
@@ -151,7 +150,6 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="Header\Entity\Entity.h" />
     <ClInclude Include="Header\Entity\FollowCamera.h" />
     <ClInclude Include="Header\Entity\Player.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />

@@ -23,12 +23,17 @@ void GameScene::Initialize() {
 
 	Model* const playerBody =
 	    ModelManager::GetInstance()->AddModel("playerBody", Model::CreateFromOBJ("body"));
-	// Model* const playerHead =
-	ModelManager::GetInstance()->AddModel("playerHead", Model::CreateFromOBJ("head"));
+	Model* const playerHead =
+	    ModelManager::GetInstance()->AddModel("playerHead", Model::CreateFromOBJ("head"));
+	Model* const playerLeft =
+	    ModelManager::GetInstance()->AddModel("playerLeft", Model::CreateFromOBJ("left"));
+	Model* const playerRight =
+	    ModelManager::GetInstance()->AddModel("playerRight", Model::CreateFromOBJ("right"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
 	player_.reset(new Player());
-	player_->Init(playerBody, TextureManager::Load("uvChecker.png"));
+	player_->Init(
+	    playerBody, playerHead, playerLeft, playerRight, TextureManager::Load("uvChecker.png"));
 
 	ground_.reset(new Ground);
 	ground_->Init();

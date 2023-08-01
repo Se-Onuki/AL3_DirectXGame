@@ -124,6 +124,7 @@ struct Radian {
 };
 
 constexpr float PI = static_cast<float>(std::numbers::pi);
+constexpr float PI_2 = static_cast<float>(std::numbers::pi) * 2.f;
 
 constexpr float Dig2Rad = PI / 180.f;
 constexpr float Rad2Dig = 180.f / PI;
