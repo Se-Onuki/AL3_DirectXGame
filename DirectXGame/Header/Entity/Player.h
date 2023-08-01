@@ -4,24 +4,18 @@
 #include <WorldTransform.h>
 #include <stdint.h>
 
+#include "BaseCharacter.h"
+
 class PlayerBullet;
 struct ViewProjection;
 class Model;
 
-class Player {
-	Model* modelBody_ = nullptr;
-	Model* modelHead_ = nullptr;
-	Model* modelL_arm_ = nullptr;
-	Model* modelR_arm_ = nullptr;
-
-	WorldTransform worldTransformOrigin_;
+class Player : public BaseCharacter {
 
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformLeft_;
 	WorldTransform worldTransformRight_;
-
-	uint32_t textureHandle_ = 0u;
 
 	Input* input_ = nullptr;
 	const ViewProjection* viewProjection_ = nullptr;
@@ -34,16 +28,13 @@ class Player {
 	void UpdateFloatingGimmick();
 
 public:
-	void Init(
-	    Model* const modelBody, Model* const modelHead, Model* const modelL_arm,
-	    Model* const modelR_arm, const uint32_t& textureHandle);
-	void Update();
-	void Draw(const ViewProjection& Vp) const;
+	void Init(const std::unordered_map<std::string, Model*>& model) override;
+	void Update() override;
+	void Draw(const ViewProjection& Vp) const override;
 	void SetViewProjection(const ViewProjection* const viewProjection) {
 		viewProjection_ = viewProjection;
 	}
 
-	const WorldTransform& GetWorldTransform() const { return worldTransformOrigin_; }
 
 	Player();
 	~Player();

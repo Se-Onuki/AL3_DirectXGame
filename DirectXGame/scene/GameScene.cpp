@@ -31,9 +31,15 @@ void GameScene::Initialize() {
 	    ModelManager::GetInstance()->AddModel("playerRight", Model::CreateFromOBJ("right"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
+	std::unordered_map<std::string, Model*> playerMap_{
+	    {"body",  playerBody },
+	    {"head",  playerHead },
+	    {"right", playerRight},
+	    {"left",  playerLeft },
+	};
+
 	player_.reset(new Player());
-	player_->Init(
-	    playerBody, playerHead, playerLeft, playerRight, TextureManager::Load("uvChecker.png"));
+	player_->Init(playerMap_);
 
 	ground_.reset(new Ground);
 	ground_->Init();

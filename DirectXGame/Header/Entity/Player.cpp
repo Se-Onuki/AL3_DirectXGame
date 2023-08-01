@@ -34,20 +34,18 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformLeft_.rotation_.x = std::sin(floatingParameter_) * swayHand_Dig * Angle::Dig2Rad;
 }
 
-void Player::Init(
-    Model* const modelBody, Model* const modelHead, Model* const modelL_arm,
-    Model* const modelR_arm, const uint32_t& textureHandle) {
+void Player::Init(const std::unordered_map<std::string, Model*>& model) {
+
+	BaseCharacter::Init(model);
 
 	// メモリ確保
-	worldTransformOrigin_.Initialize();
-
 	worldTransformBody_.Initialize();
 	worldTransformHead_.Initialize();
 	worldTransformLeft_.Initialize();
 	worldTransformRight_.Initialize();
 
 	// 親子関係
-	worldTransformBody_.parent_ = &worldTransformOrigin_;
+	worldTransformBody_.parent_ = &transformOrigin_;
 
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformLeft_.parent_ = &worldTransformBody_;
@@ -56,13 +54,6 @@ void Player::Init(
 	worldTransformHead_.translation_ = {0.f, 2.1f, 0.f};
 	worldTransformRight_.translation_ = {+0.75f, 1.5f, 0.f};
 	worldTransformLeft_.translation_ = {-0.75f, 1.5f, 0.f};
-
-	modelBody_ = modelBody;
-	modelHead_ = modelHead;
-	modelL_arm_ = modelL_arm;
-	modelR_arm_ = modelR_arm;
-
-	textureHandle_ = textureHandle;
 
 	input_ = Input::GetInstance();
 	InitFloatingGimmick();
@@ -82,16 +73,15 @@ void Player::Update() {
 			    move *
 			    Matrix4x4::EulerRotate(Matrix4x4::EulerAngle::Yaw, viewProjection_->rotation_.y);
 
-			worldTransformOrigin_.translation_ += move; // 移動量を追加
+			transformOrigin_.translation_ += move; // 移動量を追加
 
-			worldTransformOrigin_.rotation_ =
-			    move.Direction2Euler(); // ベクトルからオイラー角を算出
+			transformOrigin_.rotation_ = move.Direction2Euler(); // ベクトルからオイラー角を算出
 		}
 	}
 
 	UpdateFloatingGimmick();
 
-	worldTransformOrigin_.UpdateMatrix();
+	transformOrigin_.UpdateMatrix();
 
 	worldTransformBody_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
@@ -100,10 +90,10 @@ void Player::Update() {
 }
 
 void Player::Draw(const ViewProjection& Vp) const {
-	modelBody_->Draw(worldTransformBody_, Vp);
-	modelHead_->Draw(worldTransformHead_, Vp);
-	modelR_arm_->Draw(worldTransformRight_, Vp);
-	modelL_arm_->Draw(worldTransformLeft_, Vp);
+	modelMap_.at("body")->Draw(worldTransformBody_, Vp);
+	modelMap_.at("head")->Draw(worldTransformHead_, Vp);
+	modelMap_.at("right")->Draw(worldTransformRight_, Vp);
+	modelMap_.at("left")->Draw(worldTransformLeft_, Vp);
 }
 
 Player::Player() { input_ = Input::GetInstance(); }
