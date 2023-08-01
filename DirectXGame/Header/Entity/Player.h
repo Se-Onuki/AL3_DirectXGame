@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include <WorldTransform.h>
+#include <optional>
 #include <stdint.h>
 
 #include "BaseCharacter.h"
@@ -11,6 +12,15 @@ struct ViewProjection;
 class Model;
 
 class Player : public BaseCharacter {
+
+	enum class Behavior {
+		kRoot,   // 通常状態
+		kAttack, // 攻撃力
+	};
+
+	Behavior behavior_ = Behavior::kRoot;
+
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
@@ -29,7 +39,13 @@ class Player : public BaseCharacter {
 	void InitFloatingGimmick();
 	void UpdateFloatingGimmick();
 
-	void BehaviorRootUpdates();
+	void BehaviorRootInit();
+	void BehaviorRootUpdate();
+
+	void BehaviorAttackInit();
+	void BehaviorAttackUpdate();
+
+	void UpdateWorldMatrix();
 
 public:
 	void Init(const std::unordered_map<std::string, Model*>& model) override;
