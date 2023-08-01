@@ -123,6 +123,9 @@
     <ClCompile Include="Header\Entity\FollowCamera.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Header\Entity\Enemy.cpp">
+      <Filter>Header\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -240,6 +243,9 @@
       <Filter>Header\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Header\Entity\BaseCharacter.h">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Entity\Enemy.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
   </ItemGroup>

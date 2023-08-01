@@ -8,7 +8,7 @@ class Input;
 class FollowCamera {
 	ViewProjection viewProjection_;
 	const WorldTransform* target_ = nullptr;
-	Vector3 rotate_;
+	Vector3 rotate_ = {};
 	const float cameraRotSpeed_ = 3.f * Angle::Dig2Rad;
 	Input* input_ = nullptr;
 

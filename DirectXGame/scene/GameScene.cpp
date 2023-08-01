@@ -6,6 +6,7 @@
 #include <cassert>
 #include <imgui.h>
 
+#include "Header/Entity/Enemy.h"
 #include "Header/Entity/FollowCamera.h"
 #include "Header/ModelManager/ModelManager.h"
 #include "Header/Object/Ground.h"
@@ -31,6 +32,9 @@ void GameScene::Initialize() {
 	    ModelManager::GetInstance()->AddModel("playerRight", Model::CreateFromOBJ("right"));
 	ModelManager::GetInstance()->AddModel("Ground", Model::CreateFromOBJ("Ground"));
 
+	Model* const enemyBody =
+	    ModelManager::GetInstance()->AddModel("enemyBody", Model::CreateFromOBJ("needle_Body"));
+
 	std::unordered_map<std::string, Model*> playerMap_{
 	    {"body",  playerBody },
 	    {"head",  playerHead },
@@ -40,6 +44,11 @@ void GameScene::Initialize() {
 
 	player_.reset(new Player());
 	player_->Init(playerMap_);
+
+	enemy_.reset(new Enemy);
+	enemy_->Init(std::unordered_map<std::string, Model*>{
+	    {"body", enemyBody}
+    });
 
 	ground_.reset(new Ground);
 	ground_->Init();
@@ -59,6 +68,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+	enemy_->Update();
 	player_->Update();
 	followCamera_->Update();
 
@@ -107,6 +117,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理

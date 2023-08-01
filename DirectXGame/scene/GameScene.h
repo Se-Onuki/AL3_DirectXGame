@@ -14,6 +14,7 @@
 
 class Ground;
 class FollowCamera;
+class Enemy;
 
 /// <summary>
 /// ゲームシーン
@@ -58,6 +59,7 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_ = nullptr;
 
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<Enemy> enemy_ = nullptr;
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 
 	/// <summary>

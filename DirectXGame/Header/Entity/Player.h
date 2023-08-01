@@ -35,7 +35,6 @@ public:
 		viewProjection_ = viewProjection;
 	}
 
-
 	Player();
-	~Player();
+	~Player() override;
 };
