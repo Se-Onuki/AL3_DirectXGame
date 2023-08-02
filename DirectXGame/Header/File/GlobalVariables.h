@@ -1,6 +1,6 @@
 #pragma once
-#include <stdint.h>
 #include <Vector3.h>
+#include <stdint.h>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -13,10 +13,10 @@ class GlobalVariables {
 
 public:
 	/*struct Item {
-		std::variant<int32_t, float, Vector3> value;
+	    std::variant<int32_t, float, Vector3> value;
 	};*/
 
-	using Item = std::variant<int32_t, float, Vector3> ;
+	using Item = std::variant<int32_t, float, Vector3>;
 
 	struct Group {
 		std::unordered_map<std::string, Item> items;
@@ -32,6 +32,10 @@ public:
 	void SetValue(const std::string& groupName, const std::string& key, const int32_t value);
 	void SetValue(const std::string& groupName, const std::string& key, const float value);
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
+
+	void Update();
+
+	void SaveFile(const std::string& groupName) const;
 
 private:
 	std::unordered_map<std::string, Group> datas_;

@@ -5,8 +5,8 @@
 
 #include "ViewProjection.h"
 #include "math/Math.hpp"
-#include <Lerp.h>
 #include <Header/File/GlobalVariables.h>
+#include <Lerp.h>
 
 void Player::InitFloatingGimmick() { floatingParameter_ = 0.f; }
 
@@ -92,7 +92,8 @@ void Player::BehaviorAttackUpdate() {
 	}
 	floatingParameter_ = std::fmod(floatingParameter_, Angle::PI_2);
 
-	worldTransformWeapon_.rotation_.x = std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle);
+	worldTransformWeapon_.rotation_.x =
+	    std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle);
 	worldTransformLeft_.rotation_.x =
 	    std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle) +
 	    Angle::PI;
@@ -116,8 +117,9 @@ void Player::UpdateWorldMatrix() {
 
 void Player::Init(const std::unordered_map<std::string, Model*>& model) {
 	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
-	gVariables->CreateGroups("Player");
-
+	const char* const groupName = "Player";
+	gVariables->CreateGroups(groupName);
+	gVariables->SetValue(groupName, "Test", 90);
 
 	BaseCharacter::Init(model);
 

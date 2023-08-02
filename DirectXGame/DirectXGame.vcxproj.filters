@@ -114,9 +114,6 @@
     <ClCompile Include="Header\Timer\Timer.cpp">
       <Filter>Header\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="math\Lerp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Header\Entity\BaseCharacter.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="Header\Object\Ground.cpp">
       <Filter>Header\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="math\Lerp.cpp">
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
