@@ -1,22 +1,23 @@
 #include "GlobalVariables.h"
 #include <imgui.h>
+#include <json.hpp>
 
 void GlobalVariables::SetValue(
     const std::string& groupName, const std::string& key, const int32_t value) {
 	Group& group = datas_[groupName];
-	group.items[key] = value;
+	group[key] = value;
 }
 
 void GlobalVariables::SetValue(
     const std::string& groupName, const std::string& key, const float value) {
 	Group& group = datas_[groupName];
-	group.items[key] = value;
+	group[key] = value;
 }
 
 void GlobalVariables::SetValue(
     const std::string& groupName, const std::string& key, const Vector3 value) {
 	Group& group = datas_[groupName];
-	group.items[key] = value;
+	group[key] = value;
 }
 
 void GlobalVariables::Update() {
@@ -36,7 +37,7 @@ void GlobalVariables::Update() {
 		if (!ImGui::BeginMenu(groupName.c_str())) {
 			continue;
 		}
-		for (auto itItem = group.items.begin(); itItem != group.items.end(); itItem++) {
+		for (auto itItem = group.begin(); itItem != group.end(); itItem++) {
 			const std::string& itemName = itItem->first;
 
 			Item& item = itItem->second;
@@ -63,5 +64,22 @@ void GlobalVariables::SaveFile(const std::string& groupName) const {
 	// グループ内を検索
 	auto itGroup = datas_.find(groupName);
 	assert(itGroup != datas_.end());
-	
+
+	nlohmann::json root;                        // ""空
+	root = nlohmann::json::object();            // "{}" キー無しのJson構造体を作成
+	root[groupName] = nlohmann::json::object(); // "{"groupName":{}}"オブジェクト生成
+
+	for (auto itItem = itGroup->second.begin(); itItem != itGroup->second.end(); itItem++) {
+		const std::string& itemName = itItem->first; // キー
+		const Item& item = itItem->second;           // Value
+
+		if (std::holds_alternative<int32_t>(item)) {
+			root[groupName][itemName] = std::get<int32_t>(item);
+		} else if (std::holds_alternative<float>(item)) {
+			root[groupName][itemName] = std::get<float>(item);
+		} else if (std::holds_alternative<Vector3>(item)) {
+			const Vector3& value = std::get<Vector3>(item);
+			root[groupName][itemName] = nlohmann::json::array({value.x, value.y, value.z});
+		}
+	}
 }
