@@ -29,6 +29,8 @@ public:
 
 	void CreateGroups(const std::string& groupName) { datas_[groupName]; }
 
+	void AddValue(const std::string& groupName, const std::string& key, const int32_t value);
+
 	void SetValue(const std::string& groupName, const std::string& key, const int32_t value);
 	void SetValue(const std::string& groupName, const std::string& key, const float value);
 	void SetValue(const std::string& groupName, const std::string& key, const Vector3 value);
@@ -36,6 +38,9 @@ public:
 	void Update();
 
 	void SaveFile(const std::string& groupName) const;
+
+	void LoadFile();
+	void LoadFile(const std::string& groupName);
 
 private:
 	std::unordered_map<std::string, Group> datas_;

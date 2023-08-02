@@ -82,8 +82,7 @@ void GlobalVariables::SaveFile(const std::string& groupName) const {
 	root = nlohmann::json::object();            // "{}" キー無しのJson構造体を作成
 	root[groupName] = nlohmann::json::object(); // "{"groupName":{}}"オブジェクト生成
 
-	for (auto itItem = itGroup->second.begin(); itItem != itGroup->second.end();
-	     itItem++) {
+	for (auto itItem = itGroup->second.begin(); itItem != itGroup->second.end(); itItem++) {
 		const std::string& itemName = itItem->first; // キー
 		const Item& item = itItem->second;           // Value
 
@@ -119,4 +118,70 @@ void GlobalVariables::SaveFile(const std::string& groupName) const {
 	// ファイルにjson文字列を書き込む(インデント幅4)
 	ofs << std::setw(4) << root << std::endl;
 	ofs.close();
+}
+
+void GlobalVariables::LoadFile() {
+	// ディレクトリが無ければ終了
+	std::filesystem::path dir{kDirectoryPath};
+	if (!std::filesystem::exists(kDirectoryPath)) {
+		return;
+	}
+
+	std::filesystem::directory_iterator dir_it(kDirectoryPath);
+	for (const std::filesystem::directory_entry& entry : dir_it) {
+		// ファイルパスを取得
+		const std::filesystem::path& filePath = entry.path();
+
+		// ファイル拡張子を取得
+		std::string extension = filePath.extension().string();
+		// .jsonファイル以外はスキップ
+		if (extension.compare(".json") != 0) {
+			continue;
+		}
+		LoadFile(filePath.stem().string());
+	}
+}
+
+void GlobalVariables::LoadFile(const std::string& groupName) {
+	// 読み込むJSONファイルのフルパスを合成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	// 読み込み用ファイルストリーム
+	std::ifstream ifs;
+	// ファイルを読み込み用に開く
+	ifs.open(filePath);
+
+	// ファイルオープンエラー
+	if (ifs.fail()) {
+		std::string message = "Failed open data file for read.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	nlohmann::json root;
+	ifs >> root;
+	ifs.close();
+
+	// グループを検索
+	nlohmann::json::iterator itGroup = root.find(groupName);
+	assert(itGroup != root.end());
+
+	for (nlohmann::json::iterator itItem = itGroup->begin(); itItem != itGroup->end(); itItem++) {
+		// アイテム名を取得
+		const std::string& itemName = itItem.key();
+
+		if (itItem->is_number_integer()) {
+			// int型の値
+			int32_t value = itItem->get<int32_t>();
+			SetValue(groupName, itemName, value);
+		} else if (itItem->is_number_float()) {
+			// float型の値
+			double value = itItem->get<double>();
+			SetValue(groupName, itemName, static_cast<float>(value));
+		} else if (itItem->is_array() && itItem->size() == 3) {
+			// Vector3型の値
+			Vector3 value = Vector3{itItem->at(0), itItem->at(1), itItem->at(2)};
+			SetValue(groupName, itemName, value);
+		}
+	}
 }
