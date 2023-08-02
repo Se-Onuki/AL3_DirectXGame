@@ -11,8 +11,12 @@ class GlobalVariables {
 	GlobalVariables operator=(const GlobalVariables&) = delete;
 	~GlobalVariables() = default;
 
+	const std::string kDirectoryPath = "Resources/GlobalVariables/";
 
 public:
+	/*struct Item {
+	    std::variant<int32_t, float, Vector3> value;
+	};*/
 
 	using Item = std::variant<int32_t, float, Vector3>;
 

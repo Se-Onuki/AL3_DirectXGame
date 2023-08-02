@@ -175,7 +175,9 @@ void Player::Update() {
 		break;
 	}
 
-	// BehaviorAttackUpdate();
+	if (input_->TriggerKey(DIK_S)) {
+		GlobalVariables::GetInstance()->SaveFile("Player");
+	}
 }
 
 void Player::Draw(const ViewProjection& Vp) const {

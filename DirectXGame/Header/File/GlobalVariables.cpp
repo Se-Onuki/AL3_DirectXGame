@@ -1,6 +1,11 @@
 #include "GlobalVariables.h"
+// #include <WinUser.h>
+#include <fstream>
 #include <imgui.h>
 #include <json.hpp>
+#include <windows.h>
+
+#include "WinApp.h"
 
 void GlobalVariables::SetValue(
     const std::string& groupName, const std::string& key, const int32_t value) {
@@ -54,6 +59,14 @@ void GlobalVariables::Update() {
 			}
 		}
 
+		ImGui::Text("\n");
+		if (ImGui::Button("Save")) {
+
+			SaveFile(groupName);
+			std::string message = std::format("{}.json saved", groupName);
+			MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		}
+
 		ImGui::EndMenu();
 	}
 	ImGui::EndMenuBar();
@@ -69,7 +82,8 @@ void GlobalVariables::SaveFile(const std::string& groupName) const {
 	root = nlohmann::json::object();            // "{}" キー無しのJson構造体を作成
 	root[groupName] = nlohmann::json::object(); // "{"groupName":{}}"オブジェクト生成
 
-	for (auto itItem = itGroup->second.begin(); itItem != itGroup->second.end(); itItem++) {
+	for (auto itItem = itGroup->second.begin(); itItem != itGroup->second.end();
+	     itItem++) {
 		const std::string& itemName = itItem->first; // キー
 		const Item& item = itItem->second;           // Value
 
@@ -82,4 +96,27 @@ void GlobalVariables::SaveFile(const std::string& groupName) const {
 			root[groupName][itemName] = nlohmann::json::array({value.x, value.y, value.z});
 		}
 	}
+
+	// ディレクトリが無ければ作成する
+	std::filesystem::path dir{kDirectoryPath};
+	if (!std::filesystem::exists(kDirectoryPath)) {
+		std::filesystem::create_directory(kDirectoryPath);
+	}
+
+	// 書き込み対象のJsonファイルを作成する
+	std::string filePath = kDirectoryPath + groupName + ".json";
+	std::ofstream ofs;
+	ofs.open(filePath);
+
+	// ファイルオープン失敗の時
+	if (ofs.fail()) {
+		std::string message = "Failed open data file for write.";
+		MessageBoxA(nullptr, message.c_str(), "GlobalVariables", 0);
+		assert(0);
+		return;
+	}
+
+	// ファイルにjson文字列を書き込む(インデント幅4)
+	ofs << std::setw(4) << root << std::endl;
+	ofs.close();
 }
