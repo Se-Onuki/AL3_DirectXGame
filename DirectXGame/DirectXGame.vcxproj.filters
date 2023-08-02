@@ -64,6 +64,9 @@
     <Filter Include="Header\Timer">
       <UniqueIdentifier>{5480c2f4-19b7-453c-9b80-e974c625a6fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\File">
+      <UniqueIdentifier>{7ff2f836-6580-42f1-8090-561942e9d05f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -114,9 +117,6 @@
     <ClCompile Include="math\Lerp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Header\Object\Ground.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Header\Entity\BaseCharacter.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
@@ -124,6 +124,12 @@
       <Filter>Header\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Header\Entity\Enemy.cpp">
+      <Filter>Header\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\File\GlobalVariables.cpp">
+      <Filter>Header\File</Filter>
+    </ClCompile>
+    <ClCompile Include="Header\Object\Ground.cpp">
       <Filter>Header\Entity</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,9 +242,6 @@
     <ClInclude Include="math\Lerp.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Header\Object\Ground.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Header\Entity\FollowCamera.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
@@ -246,6 +249,12 @@
       <Filter>Header\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Header\Entity\Enemy.h">
+      <Filter>Header\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\File\GlobalVariables.h">
+      <Filter>Header\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Object\Ground.h">
       <Filter>Header\Entity</Filter>
     </ClInclude>
   </ItemGroup>

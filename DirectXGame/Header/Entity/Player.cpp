@@ -6,6 +6,7 @@
 #include "ViewProjection.h"
 #include "math/Math.hpp"
 #include <Lerp.h>
+#include <Header/File/GlobalVariables.h>
 
 void Player::InitFloatingGimmick() { floatingParameter_ = 0.f; }
 
@@ -114,6 +115,9 @@ void Player::UpdateWorldMatrix() {
 }
 
 void Player::Init(const std::unordered_map<std::string, Model*>& model) {
+	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
+	gVariables->CreateGroups("Player");
+
 
 	BaseCharacter::Init(model);
 

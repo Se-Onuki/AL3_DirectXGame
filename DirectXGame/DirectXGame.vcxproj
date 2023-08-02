@@ -116,6 +116,7 @@
     <ClCompile Include="Header\Entity\Enemy.cpp" />
     <ClCompile Include="Header\Entity\FollowCamera.cpp" />
     <ClCompile Include="Header\Entity\Player.cpp" />
+    <ClCompile Include="Header\File\GlobalVariables.cpp" />
     <ClCompile Include="Header\Object\Ground.cpp" />
     <ClCompile Include="Header\Timer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Header\Entity\Enemy.h" />
     <ClInclude Include="Header\Entity\FollowCamera.h" />
     <ClInclude Include="Header\Entity\Player.h" />
+    <ClInclude Include="Header\File\GlobalVariables.h" />
     <ClInclude Include="Header\ModelManager\ModelManager.h" />
     <ClInclude Include="Header\Object\Ground.h" />
     <ClInclude Include="Header\Timer\Timer.h" />
