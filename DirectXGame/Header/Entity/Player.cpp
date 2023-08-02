@@ -119,7 +119,7 @@ void Player::Init(const std::unordered_map<std::string, Model*>& model) {
 	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
 	const char* const groupName = "Player";
 	gVariables->CreateGroups(groupName);
-	gVariables->SetValue(groupName, "Test", 90);
+	gVariables->AddValue(groupName, "Test", 90);
 
 	BaseCharacter::Init(model);
 
@@ -173,10 +173,6 @@ void Player::Update() {
 	case Player::Behavior::kAttack:
 		BehaviorAttackUpdate();
 		break;
-	}
-
-	if (input_->TriggerKey(DIK_S)) {
-		GlobalVariables::GetInstance()->SaveFile("Player");
 	}
 }
 

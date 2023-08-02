@@ -7,6 +7,34 @@
 
 #include "WinApp.h"
 
+void GlobalVariables::AddValue(
+    const std::string& groupName, const std::string& key, const int32_t value) {
+	auto itItem = datas_[groupName].find(key); // キーがあるか
+	if (itItem == datas_[groupName].end()) {
+		SetValue(groupName, key, value);
+		return;
+	}
+	return;
+}
+void GlobalVariables::AddValue(
+    const std::string& groupName, const std::string& key, const float value) {
+	auto itItem = datas_[groupName].find(key); // キーがあるか
+	if (itItem == datas_[groupName].end()) {
+		SetValue(groupName, key, value);
+		return;
+	}
+	return;
+}
+void GlobalVariables::AddValue(
+    const std::string& groupName, const std::string& key, const Vector3 value) {
+	auto itItem = datas_[groupName].find(key); // キーがあるか
+	if (itItem == datas_[groupName].end()) {
+		SetValue(groupName, key, value);
+		return;
+	}
+	return;
+}
+
 void GlobalVariables::SetValue(
     const std::string& groupName, const std::string& key, const int32_t value) {
 	Group& group = datas_[groupName];
@@ -173,15 +201,15 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		if (itItem->is_number_integer()) {
 			// int型の値
 			int32_t value = itItem->get<int32_t>();
-			SetValue(groupName, itemName, value);
+			AddValue(groupName, itemName, value);
 		} else if (itItem->is_number_float()) {
 			// float型の値
 			double value = itItem->get<double>();
-			SetValue(groupName, itemName, static_cast<float>(value));
+			AddValue(groupName, itemName, static_cast<float>(value));
 		} else if (itItem->is_array() && itItem->size() == 3) {
 			// Vector3型の値
 			Vector3 value = Vector3{itItem->at(0), itItem->at(1), itItem->at(2)};
-			SetValue(groupName, itemName, value);
+			AddValue(groupName, itemName, value);
 		}
 	}
 }

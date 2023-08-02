@@ -30,6 +30,8 @@ public:
 	void CreateGroups(const std::string& groupName) { datas_[groupName]; }
 
 	void AddValue(const std::string& groupName, const std::string& key, const int32_t value);
+	void AddValue(const std::string& groupName, const std::string& key, const float value);
+	void AddValue(const std::string& groupName, const std::string& key, const Vector3 value);
 
 	void SetValue(const std::string& groupName, const std::string& key, const int32_t value);
 	void SetValue(const std::string& groupName, const std::string& key, const float value);
