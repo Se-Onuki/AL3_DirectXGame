@@ -8,32 +8,49 @@
 #include <Header/File/GlobalVariables.h>
 #include <Lerp.h>
 
+void Player::ApplyClobalVariables() {
+	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
+	gVariables;
+	const char* groupName = "Player";
+	groupName;
+	worldTransformHead_.translation_ = gVariables->Get<Vector3>(groupName, "Head Translation");
+	worldTransformLeft_.translation_ = gVariables->Get<Vector3>(groupName, "ArmL Translation");
+	worldTransformRight_.translation_ = gVariables->Get<Vector3>(groupName, "ArmR Translation");
+
+	floatingCycle_ = gVariables->Get<decltype(floatingCycle_)>(groupName, "floatingCycle");
+	floatingSwayHand_ = gVariables->Get<decltype(floatingSwayHand_)>(groupName, "floatingSwayHand");
+	floatingCycleRange_ =
+	    gVariables->Get<decltype(floatingCycleRange_)>(groupName, "floatingCycleRange");
+
+	attackClampAngle_ = gVariables->Get<decltype(attackClampAngle_)>(groupName, "attackClampAngle");
+	attackCycle_ = gVariables->Get<decltype(attackCycle_)>(groupName, "attackCycle");
+	attackStartAngle_ = gVariables->Get<decltype(attackStartAngle_)>(groupName, "attackStartAngle");
+	attackSwingAngle_ = gVariables->Get<decltype(attackSwingAngle_)>(groupName, "attackSwingAngle");
+}
+
 void Player::InitFloatingGimmick() { floatingParameter_ = 0.f; }
 
 void Player::UpdateFloatingGimmick() {
 
-	static int32_t cycle = 120u;
-	const float step = Angle::PI_2 / cycle;
-
-	static float cycleRange = 0.2f;
-	static int32_t swayHand_Dig = 30;
+	const float step = Angle::PI_2 / floatingCycle_;
 
 	ImGui::Begin("Player");
 	ImGui::SliderFloat3("Head Transform", &worldTransformHead_.translation_.x, -10.f, 10.f);
 	ImGui::SliderFloat3("Left Transform", &worldTransformLeft_.translation_.x, -10.f, 10.f);
 	ImGui::SliderFloat3("Right Transform", &worldTransformRight_.translation_.x, -10.f, 10.f);
-	ImGui::SliderInt("Cycle", &cycle, 1, 360);
-	ImGui::SliderFloat("CycleRange", &cycleRange, 0.f, 3.f);
-	ImGui::SliderInt("SwayHand", &swayHand_Dig, 0, 360);
+	ImGui::SliderInt("Cycle", &floatingCycle_, 1, 360);
+	ImGui::SliderFloat("CycleRange", &floatingCycleRange_, 0.f, 3.f);
+	ImGui::SliderAngle("SwayHand", &floatingSwayHand_, 0.f, 360.f);
 	ImGui::End();
 
 	floatingParameter_ += step;
 	floatingParameter_ = std::fmod(floatingParameter_, Angle::PI_2);
 
-	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * cycleRange + originPos;
+	worldTransformBody_.translation_.y =
+	    std::sin(floatingParameter_) * floatingCycleRange_ + originPos;
 
-	worldTransformRight_.rotation_.x = std::sin(floatingParameter_) * swayHand_Dig * Angle::Dig2Rad;
-	worldTransformLeft_.rotation_.x = std::sin(floatingParameter_) * swayHand_Dig * Angle::Dig2Rad;
+	worldTransformRight_.rotation_.x = std::sin(floatingParameter_) * floatingSwayHand_;
+	worldTransformLeft_.rotation_.x = std::sin(floatingParameter_) * floatingSwayHand_;
 }
 
 void Player::BehaviorRootInit() { floatingParameter_ = 0.f; }
@@ -69,21 +86,17 @@ void Player::BehaviorRootUpdate() {
 void Player::BehaviorAttackInit() { floatingParameter_ = 0.f; }
 
 void Player::BehaviorAttackUpdate() {
-	static int32_t cycle = 90u;
-	const float step = Angle::PI_2 / cycle;
 
-	static float startAngle = 0.f * Angle::Dig2Rad;
-	static float swingAngle = 130.f * Angle::Dig2Rad;
-	static float clampAngle = 110.f * Angle::Dig2Rad;
+	const float step = Angle::PI_2 / attackCycle_;
 
 	ImGui::Begin("Player");
 	ImGui::SliderFloat3("Head Transform", &worldTransformHead_.translation_.x, -10.f, 10.f);
 	ImGui::SliderFloat3("Left Transform", &worldTransformLeft_.translation_.x, -10.f, 10.f);
 	ImGui::SliderFloat3("Right Transform", &worldTransformRight_.translation_.x, -10.f, 10.f);
-	ImGui::SliderInt("Cycle", &cycle, 1, 360);
-	ImGui::SliderAngle("CycleRange", &startAngle);
-	ImGui::SliderAngle("SwayHand", &swingAngle);
-	ImGui::SliderAngle("ClampAngle", &clampAngle);
+	ImGui::SliderInt("Cycle", &attackCycle_, 1, 360);
+	ImGui::SliderAngle("CycleRange", &attackStartAngle_);
+	ImGui::SliderAngle("SwayHand", &attackSwingAngle_);
+	ImGui::SliderAngle("ClampAngle", &attackClampAngle_);
 	ImGui::End();
 
 	floatingParameter_ += step;
@@ -92,13 +105,18 @@ void Player::BehaviorAttackUpdate() {
 	}
 	floatingParameter_ = std::fmod(floatingParameter_, Angle::PI_2);
 
-	worldTransformWeapon_.rotation_.x =
-	    std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle);
+	worldTransformWeapon_.rotation_.x = std::clamp<float>(
+	    std::sin(floatingParameter_) * attackSwingAngle_ + attackStartAngle_, 0.f,
+	    attackClampAngle_);
 	worldTransformLeft_.rotation_.x =
-	    std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle) +
+	    std::clamp<float>(
+	        std::sin(floatingParameter_) * attackSwingAngle_ + attackStartAngle_, 0.f,
+	        attackClampAngle_) +
 	    Angle::PI;
 	worldTransformRight_.rotation_.x =
-	    std::clamp<float>(std::sin(floatingParameter_) * swingAngle + startAngle, 0.f, clampAngle) +
+	    std::clamp<float>(
+	        std::sin(floatingParameter_) * attackSwingAngle_ + attackStartAngle_, 0.f,
+	        attackClampAngle_) +
 	    Angle::PI;
 
 	UpdateWorldMatrix();
@@ -118,8 +136,7 @@ void Player::UpdateWorldMatrix() {
 void Player::Init(const std::unordered_map<std::string, Model*>& model) {
 	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
 	const char* const groupName = "Player";
-	gVariables->CreateGroups(groupName);
-	gVariables->AddValue(groupName, "Test", 90);
+	ApplyClobalVariables();
 
 	BaseCharacter::Init(model);
 
@@ -145,6 +162,19 @@ void Player::Init(const std::unordered_map<std::string, Model*>& model) {
 	worldTransformLeft_.translation_ = {-0.75f, 1.5f, 0.f};
 
 	worldTransformWeapon_.translation_ = {0.f, 2.f, 0.f};
+
+	gVariables->AddValue(groupName, "Head Translation", worldTransformHead_.translation_);
+	gVariables->AddValue(groupName, "ArmL Translation", worldTransformLeft_.translation_);
+	gVariables->AddValue(groupName, "ArmR Translation", worldTransformRight_.translation_);
+
+	gVariables->AddValue(groupName, "floatingCycle", floatingCycle_);
+	gVariables->AddValue(groupName, "floatingSwayHand", floatingSwayHand_);
+	gVariables->AddValue(groupName, "floatingCycleRange", floatingCycleRange_);
+
+	gVariables->AddValue(groupName, "attackClampAngle", attackClampAngle_);
+	gVariables->AddValue(groupName, "attackCycle", attackCycle_);
+	gVariables->AddValue(groupName, "attackStartAngle", attackStartAngle_);
+	gVariables->AddValue(groupName, "attackSwingAngle", attackSwingAngle_);
 
 	input_ = Input::GetInstance();
 	InitFloatingGimmick();
@@ -174,6 +204,9 @@ void Player::Update() {
 		BehaviorAttackUpdate();
 		break;
 	}
+	if (input_->TriggerKey(DIK_R)) {
+		ApplyClobalVariables();
+	}
 }
 
 void Player::Draw(const ViewProjection& Vp) const {
@@ -181,7 +214,9 @@ void Player::Draw(const ViewProjection& Vp) const {
 	modelMap_.at("head")->Draw(worldTransformHead_, Vp);
 	modelMap_.at("right")->Draw(worldTransformRight_, Vp);
 	modelMap_.at("left")->Draw(worldTransformLeft_, Vp);
-	modelMap_.at("weapon")->Draw(worldTransformWeapon_, Vp);
+
+	if (behavior_ == Player::Behavior::kAttack)
+		modelMap_.at("weapon")->Draw(worldTransformWeapon_, Vp);
 }
 
 Player::Player() { input_ = Input::GetInstance(); }

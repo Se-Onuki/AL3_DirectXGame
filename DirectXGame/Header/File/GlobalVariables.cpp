@@ -213,3 +213,12 @@ void GlobalVariables::LoadFile(const std::string& groupName) {
 		}
 	}
 }
+//
+//void Serializer::SetItems(const std::string& groupName) const {
+//	GlobalVariables* const gVariables = GlobalVariables::GetInstance();
+//	gVariables->CreateGroups(groupName);
+//	for (const auto& item : itemMap_) {
+//		gVariables->AddValue<>(
+//		    groupName, item.first, item.second.second);
+//	}
+//}

@@ -1,5 +1,27 @@
 {
     "Player": {
-        "Test": 100
+        "ArmL Translation": [
+            -0.75,
+            1.5,
+            0.0
+        ],
+        "ArmR Translation": [
+            0.75,
+            1.5,
+            0.0
+        ],
+        "Head Translation": [
+            0.0,
+            2.0999999046325684,
+            0.0
+        ],
+        "Test": 100,
+        "attackClampAngle": 1.919862151145935,
+        "attackCycle": 90,
+        "attackStartAngle": 0.0,
+        "attackSwingAngle": 2.268928050994873,
+        "floatingCycle": 50,
+        "floatingCycleRange": 0.20000000298023224,
+        "floatingSwayHand": 0.5239999890327454
     }
 }

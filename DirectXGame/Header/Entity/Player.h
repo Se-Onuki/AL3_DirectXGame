@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Math.hpp"
 #include "input.h"
 #include <WorldTransform.h>
 #include <optional>
@@ -36,6 +37,18 @@ class Player : public BaseCharacter {
 
 	float floatingParameter_ = 0.f;
 	const float originPos = 0.5f;
+
+	int32_t floatingCycle_ = 120u;
+	float floatingCycleRange_ = 0.2f;
+	float floatingSwayHand_ = 30 * Angle::Dig2Rad;
+
+	int32_t attackCycle_ = 90u;
+	float attackStartAngle_ = 0.f * Angle::Dig2Rad;
+	float attackSwingAngle_ = 130.f * Angle::Dig2Rad;
+	float attackClampAngle_ = 110.f * Angle::Dig2Rad;
+
+	void ApplyClobalVariables();
+
 	void InitFloatingGimmick();
 	void UpdateFloatingGimmick();
 
